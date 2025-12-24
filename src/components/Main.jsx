@@ -1,5 +1,5 @@
 import FilterPanel from "./FilterPanel";
-import GraphLayer from "./graph/GraphLayer";
+import GraphLayer from "./charts/Layer";
 
 export default function Main() {
     return (
