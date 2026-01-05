@@ -64,12 +64,24 @@ export default function GraphLayer({ nodes, links }) {
                     <g className="nodes">
                         {nodes.map((n) => (
                             <g key={n.id} className="group cursor-pointer">
+                                {/* 当たり判定 */}
+                                <rect
+                                    x={n.x - 6}
+                                    y={n.y - 6}
+                                    width={6 + 8 + n.label.length * 6}
+                                    height={14}
+                                    fill="transparent"
+                                />
+
+                                {/* ノード */}
                                 <circle
                                     cx={n.x}
                                     cy={n.y}
                                     r={6}
                                     className="fill-blue-500 group-hover:fill-blue-600"
                                 />
+
+                                {/* ラベル */}
                                 <text
                                     x={n.x + 8}
                                     y={n.y + 4}
