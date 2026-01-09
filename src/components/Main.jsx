@@ -1,11 +1,14 @@
 import FilterPanel from "./FilterPanel";
-import GraphLayer from "./charts/Layer";
+import DetailModel from "./detail/DetailModal";
+
+import { useState } from "react";
 
 export default function Main() {
+    const [selectedCont, setSelectedCont] = useState(null);
     return (
         <>
             <FilterPanel />
-            <GraphLayer />
+            <DetailModel cont={selectedCont} />
         </>
     );
 }
