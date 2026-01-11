@@ -1,4 +1,6 @@
 import DetailContent from "./detail/DetailContent";
+import GraphLayer from "./charts/Layer";
+import { buildGraph } from "../lib/buildGraph";
 import { useEffect, useMemo, useState } from "react";
 import { csvParse } from "d3-dsv";
 
@@ -34,8 +36,8 @@ export default function Main() {
                         props: r["小道具"] ?? "",
                         relatedPerformanceId: String(
                             r["関連性の強い公演(id)"] ??
-                                r["関連性の強い公演ID"] ??
-                                ""
+                            r["関連性の強い公演ID"] ??
+                            ""
                         ),
                         relatedPerformanceName: r["関連性の高い公演名"] ?? "",
                     }))
@@ -68,10 +70,25 @@ export default function Main() {
         }
     }, [contMetaData, selectedContId]);
 
+    // グラフの取得
+    const [graph, setGraph] = useState(null);
+    useEffect(() => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        buildGraph({ width, height }).then(setGraph);
+    }, []);
+
     return (
-        <DetailContent
-            cont={selectedCont}
-            onClose={() => setSelectedContId(null)}
-        />
+        <>
+            <GraphLayer
+                nodes={graph?.nodes ?? null}
+                links={graph?.links ?? null}
+            />
+            <DetailContent
+                cont={selectedCont}
+                onClose={() => setSelectedContId(null)}
+            />
+        </>
     );
 }
