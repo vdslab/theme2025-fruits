@@ -1,5 +1,4 @@
 import DetailContent from "./detail/DetailContent";
-
 import { useEffect, useMemo, useState } from "react";
 import { csvParse } from "d3-dsv";
 
@@ -17,14 +16,14 @@ export default function Main() {
                 });
                 if (!res.ok) {
                     throw new Error(
-                        `cont_meta.csvの取得に失敗: ${res.status} ${res.statusText}`
+                        `CSV取得に失敗: ${res.status} ${res.statusText}`
                     );
                 }
 
-                const text = await res.text();
+                const rawText = await res.text();
+                const text = rawText.replace(/^\uFEFF/, ""); // BOM対策
                 const rows = csvParse(text);
 
-                // 正規化
                 const normalized = rows
                     .map((r) => ({
                         performanceId: String(r["公演ID"] ?? ""),
@@ -52,13 +51,17 @@ export default function Main() {
         return () => ac.abort();
     }, []);
 
-    // 辞書つくる
+    // 1) contById を先に作る
     const contById = useMemo(() => {
         const m = new Map();
         for (const c of contMetaData) m.set(c.contId, c);
         return m;
     }, [contMetaData]);
 
+    // 2) contById を使うのはこの後
+    const selectedCont = selectedContId ? contById.get(selectedContId) : null;
+
+    // 3) 自動選択も contMetaData が入った後に
     useEffect(() => {
         if (contMetaData.length > 0 && selectedContId == null) {
             setSelectedContId(contMetaData[0].contId);
@@ -67,7 +70,7 @@ export default function Main() {
 
     return (
         <DetailContent
-            contId={selectedContId}
+            cont={selectedCont}
             onClose={() => setSelectedContId(null)}
         />
     );
