@@ -1,6 +1,3 @@
-import FilterPanel from "./FilterPanel";
-import DetailModel from "./detail/DetailModal";
-
 import { useEffect, useMemo, useState } from "react";
 import { csvParse } from "d3-dsv";
 
@@ -60,6 +57,11 @@ export default function Main() {
         return m;
     }, [contMetaData]);
 
-    console.log(contMetaData);
+    useEffect(() => {
+        if (contMetaData.length > 0) {
+            setSelectedContId(contMetaData[0].contId);
+        }
+    }, [contMetaData]);
+
     return <p>aaa</p>;
 }
