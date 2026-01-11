@@ -1,3 +1,5 @@
+import DetailContent from "./detail/DetailContent";
+
 import { useEffect, useMemo, useState } from "react";
 import { csvParse } from "d3-dsv";
 
@@ -58,10 +60,15 @@ export default function Main() {
     }, [contMetaData]);
 
     useEffect(() => {
-        if (contMetaData.length > 0) {
+        if (contMetaData.length > 0 && selectedContId == null) {
             setSelectedContId(contMetaData[0].contId);
         }
-    }, [contMetaData]);
+    }, [contMetaData, selectedContId]);
 
-    return <p>aaa</p>;
+    return (
+        <DetailContent
+            contId={selectedContId}
+            onClose={() => setSelectedContId(null)}
+        />
+    );
 }
