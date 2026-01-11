@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { select } from "d3-selection";
 import { zoom } from "d3-zoom";
 
-export default function GraphLayer({ nodes, links }) {
+export default function GraphLayer({ nodes, links, setSelectedContId }) {
     const svgRef = useRef(null);
     const viewportRef = useRef(null);
 
@@ -63,7 +63,7 @@ export default function GraphLayer({ nodes, links }) {
                     {/* ---- nodes ---- */}
                     <g className="nodes">
                         {nodes.map((n) => (
-                            <g key={n.id} className="group cursor-pointer">
+                            <g key={n.id} className="group cursor-pointer" onClick={() => setSelectedContId(n.id)}>
                                 {/* 当たり判定 */}
                                 <rect
                                     x={n.x - 6}
