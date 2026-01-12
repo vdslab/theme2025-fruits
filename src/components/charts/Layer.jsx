@@ -1,10 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { select } from "d3-selection";
 import { zoom } from "d3-zoom";
 
-export default function GraphLayer({ nodes, links, setSelectedContId }) {
+export default function GraphLayer({ nodes, links, selectedContId, setSelectedContId, }) {
     const svgRef = useRef(null);
     const viewportRef = useRef(null);
+
+    const [hoveredNodeId, setHoveredNodeId] = useState(null);
+
+    // hover より selected を優先
+    const activeNodeId = selectedContId ?? hoveredNodeId;
 
     // ---- zoom / pan の設定 ----
     useEffect(() => {
@@ -27,7 +32,14 @@ export default function GraphLayer({ nodes, links, setSelectedContId }) {
         };
     }, [nodes, links]);
 
-    // ---- Loading / 未初期化 ----
+    // 詳細画面をを閉じたらホバーも解除する
+    useEffect(() => {
+        if (selectedContId == null) {
+            setHoveredNodeId(null);
+        }
+    }, [selectedContId]);
+
+    // // ---- Loading / 未初期化 ----
     if (!nodes || !links) {
         return (
             <div className="flex h-full w-full items-center justify-center text-sm text-gray-500">
@@ -47,45 +59,116 @@ export default function GraphLayer({ nodes, links, setSelectedContId }) {
                 <g ref={viewportRef}>
                     {/* ---- links ---- */}
                     <g className="links">
-                        {links.map((l, i) => (
-                            <line
-                                key={i}
-                                x1={l.source.x}
-                                y1={l.source.y}
-                                x2={l.target.x}
-                                y2={l.target.y}
-                                className="stroke-gray-400/70"
-                                strokeWidth={1 + 2 * l.weight}
-                            />
-                        ))}
+                        {links.map((l, i) => {
+                            const connected =
+                                activeNodeId &&
+                                (l.source.id === activeNodeId ||
+                                    l.target.id === activeNodeId);
+
+                            return (
+                                <line
+                                    key={i}
+                                    x1={l.source.x}
+                                    y1={l.source.y}
+                                    x2={l.target.x}
+                                    y2={l.target.y}
+                                    className={
+                                        activeNodeId
+                                            ? connected
+                                                ? "stroke-gray-400"
+                                                : "stroke-gray-400 opacity-10"
+                                            : "stroke-gray-400/70"
+                                    }
+                                    strokeWidth={
+                                        connected
+                                            ? 2 + 2 * l.weight
+                                            : 1 + 2 * l.weight
+                                    }
+                                />
+                            );
+                        })}
                     </g>
 
                     {/* ---- nodes ---- */}
                     <g className="nodes">
-                        {nodes.map((n) => (
-                            <g key={n.id} className="group">
-                                {/* ノード */}
-                                <circle
-                                    cx={n.x}
-                                    cy={n.y}
-                                    r={12}
-                                    className="cursor-pointer fill-blue-500 group-hover:fill-blue-600"
-                                    onClick={() => setSelectedContId(n.id)}
-                                />
+                        {nodes.map((n) => {
+                            const isActive =
+                                activeNodeId &&
+                                (n.id === activeNodeId ||
+                                    links.some(
+                                        (l) =>
+                                            (l.source.id === activeNodeId &&
+                                                l.target.id === n.id) ||
+                                            (l.target.id === activeNodeId &&
+                                                l.source.id === n.id)
+                                    ));
 
-                                {/* ラベル */}
-                                <text
-                                    x={n.x}
-                                    y={n.y - 12 - 2}
-                                    textAnchor="middle"
-                                    dominantBaseline="auto"
-                                    pointerEvents="none"
-                                    className="select-none text-[15px] fill-gray-800 opacity-80 group-hover:opacity-100"
+                            const isDimmed = activeNodeId && !isActive;
+                            const r = isActive ? 14 : 12;
+
+                            return (
+                                <g
+                                    key={n.id}
+                                    onMouseEnter={() => {
+                                        if (selectedContId == null) {
+                                            setHoveredNodeId(n.id);
+                                        }
+                                    }}
+                                    onMouseLeave={() => {
+                                        if (selectedContId == null) {
+                                            setHoveredNodeId(null);
+                                        }
+                                    }}
                                 >
-                                    {n.label}
-                                </text>
-                            </g>
-                        ))}
+                                    {/* 下地（エッジ遮断用） */}
+                                    <circle
+                                        cx={n.x}
+                                        cy={n.y}
+                                        r={r}
+                                        fill="white"
+                                    />
+
+                                    {/* 実ノード */}
+                                    <circle
+                                        cx={n.x}
+                                        cy={n.y}
+                                        r={r}
+                                        className={`
+                                            cursor-pointer
+                                            transition-all
+                                            ${isActive
+                                                ? "fill-blue-600"
+                                                : isDimmed
+                                                    ? "fill-blue-300 opacity-50"
+                                                    : "fill-blue-500"
+                                            }
+                                        `}
+                                        onClick={() =>
+                                            setSelectedContId(n.id)
+                                        }
+                                    />
+
+                                    {/* ラベル */}
+                                    <text
+                                        x={n.x}
+                                        y={n.y - r - 2}
+                                        textAnchor="middle"
+                                        pointerEvents="none"
+                                        className={`
+                                            select-none
+                                            ${isActive
+                                                ? "text-[16px] fill-gray-900 opacity-100"
+                                                : isDimmed
+                                                    ? "text-[15px] fill-gray-500 opacity-70"
+                                                    : "text-[15px] fill-gray-800 opacity-80"
+                                            }
+                                        `}
+                                    >
+                                        {n.label}
+                                    </text>
+                                </g>
+                            );
+                        })}
                     </g>
                 </g>
             </svg>
