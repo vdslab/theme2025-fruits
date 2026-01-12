@@ -25,7 +25,6 @@ function toYouTubeEmbedUrl(url) {
 }
 
 export default function DetailContent({ cont, onClose }) {
-    console.log(cont);
     if (!cont) return null;
 
     const embedUrl = toYouTubeEmbedUrl(cont.url);
