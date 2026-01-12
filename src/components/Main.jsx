@@ -130,7 +130,8 @@ export default function Main() {
             <GraphLayer
                 nodes={graph?.nodes ?? null}
                 links={graph?.links ?? null}
-                setSelectedContId={setSelectedContId}
+                selectedContId={selectedContId}
+                setSelectedContId={selectCont}
             />
             <DetailContent
                 cont={selectedCont}

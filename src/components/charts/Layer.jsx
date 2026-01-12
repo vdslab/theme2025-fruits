@@ -2,14 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { select } from "d3-selection";
 import { zoom } from "d3-zoom";
 
-export default function GraphLayer({ nodes, links, setSelectedContId }) {
+export default function GraphLayer({
+    nodes,
+    links,
+    selectedContId,
+    setSelectedContId,
+}) {
     const svgRef = useRef(null);
     const viewportRef = useRef(null);
 
     const [hoveredNodeId, setHoveredNodeId] = useState(null);
-    const [selectedNodeId, setSelectedNodeId] = useState(null);
 
-    const activeNodeId = selectedNodeId ?? hoveredNodeId;
+    // hover より selected を優先
+    const activeNodeId = selectedContId ?? hoveredNodeId;
 
     // ---- zoom / pan の設定 ----
     useEffect(() => {
@@ -32,7 +37,7 @@ export default function GraphLayer({ nodes, links, setSelectedContId }) {
         };
     }, [nodes, links]);
 
-    // ---- Loading / 未初期化 ----
+    // ---- Loading ----
     if (!nodes || !links) {
         return (
             <div className="flex h-full w-full items-center justify-center text-sm text-gray-500">
@@ -97,18 +102,21 @@ export default function GraphLayer({ nodes, links, setSelectedContId }) {
                                     ));
 
                             const isDimmed = activeNodeId && !isActive;
-
                             const r = isActive ? 14 : 12;
 
                             return (
                                 <g
                                     key={n.id}
-                                    onMouseEnter={() =>
-                                        !selectedNodeId && setHoveredNodeId(n.id)
-                                    }
-                                    onMouseLeave={() =>
-                                        !selectedNodeId && setHoveredNodeId(null)
-                                    }
+                                    onMouseEnter={() => {
+                                        if (selectedContId == null) {
+                                            setHoveredNodeId(n.id);
+                                        }
+                                    }}
+                                    onMouseLeave={() => {
+                                        if (selectedContId == null) {
+                                            setHoveredNodeId(null);
+                                        }
+                                    }}
                                 >
                                     {/* 下地（エッジ遮断用） */}
                                     <circle
@@ -124,19 +132,18 @@ export default function GraphLayer({ nodes, links, setSelectedContId }) {
                                         cy={n.y}
                                         r={r}
                                         className={`
-                        cursor-pointer
-                        transition-all
-                        ${isActive
+                                            cursor-pointer
+                                            transition-all
+                                            ${isActive
                                                 ? "fill-blue-600"
                                                 : isDimmed
                                                     ? "fill-blue-300 opacity-50"
                                                     : "fill-blue-500"
                                             }
-                    `}
-                                        onClick={() => {
-                                            setSelectedNodeId(n.id);
-                                            setSelectedContId(n.id);
-                                        }}
+                                        `}
+                                        onClick={() =>
+                                            setSelectedContId(n.id)
+                                        }
                                     />
 
                                     {/* ラベル */}
@@ -146,14 +153,14 @@ export default function GraphLayer({ nodes, links, setSelectedContId }) {
                                         textAnchor="middle"
                                         pointerEvents="none"
                                         className={`
-                        select-none
-                        ${isActive
+                                            select-none
+                                            ${isActive
                                                 ? "text-[16px] fill-gray-900 opacity-100"
                                                 : isDimmed
                                                     ? "text-[15px] fill-gray-500 opacity-70"
                                                     : "text-[15px] fill-gray-800 opacity-80"
                                             }
-                    `}
+                                        `}
                                     >
                                         {n.label}
                                     </text>
