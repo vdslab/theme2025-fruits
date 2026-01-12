@@ -2,12 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { select } from "d3-selection";
 import { zoom } from "d3-zoom";
 
-export default function GraphLayer({
-    nodes,
-    links,
-    selectedContId,
-    setSelectedContId,
-}) {
+export default function GraphLayer({ nodes, links, selectedContId, setSelectedContId, }) {
     const svgRef = useRef(null);
     const viewportRef = useRef(null);
 
@@ -37,7 +32,7 @@ export default function GraphLayer({
         };
     }, [nodes, links]);
 
-    // ---- Loading ----
+    // // ---- Loading / 未初期化 ----
     if (!nodes || !links) {
         return (
             <div className="flex h-full w-full items-center justify-center text-sm text-gray-500">
