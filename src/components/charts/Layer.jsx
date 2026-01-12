@@ -150,7 +150,7 @@ export default function GraphLayer({ nodes, links, setSelectedContId }) {
                         ${isActive
                                                 ? "text-[16px] fill-gray-900 opacity-100"
                                                 : isDimmed
-                                                    ? "text-[15px] fill-gray-500 opacity-50"
+                                                    ? "text-[15px] fill-gray-500 opacity-70"
                                                     : "text-[15px] fill-gray-800 opacity-80"
                                             }
                     `}
