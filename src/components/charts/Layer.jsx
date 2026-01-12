@@ -64,7 +64,7 @@ export default function GraphLayer({ nodes, links, setSelectedContId }) {
                     <g className="nodes">
                         {nodes.map((n) => (
                             <g key={n.id} className="group">
-                                {/* ノード（当たり判定はここだけ） */}
+                                {/* ノード */}
                                 <circle
                                     cx={n.x}
                                     cy={n.y}
@@ -73,7 +73,7 @@ export default function GraphLayer({ nodes, links, setSelectedContId }) {
                                     onClick={() => setSelectedContId(n.id)}
                                 />
 
-                                {/* ラベル（表示のみ・当たり判定なし） */}
+                                {/* ラベル */}
                                 <text
                                     x={n.x}
                                     y={n.y - 12 - 2}
@@ -87,7 +87,6 @@ export default function GraphLayer({ nodes, links, setSelectedContId }) {
                             </g>
                         ))}
                     </g>
-
                 </g>
             </svg>
         </div>
