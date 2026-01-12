@@ -1,12 +1,20 @@
 import DetailContent from "./detail/DetailContent";
 import GraphLayer from "./charts/Layer";
 import { buildGraph } from "../lib/buildGraph";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { csvParse } from "d3-dsv";
 
 export default function Main() {
     const [contMetaData, setContMetaData] = useState([]);
     const [selectedContId, setSelectedContId] = useState(null);
+
+    const autoPickTimerRef = useRef(null);
+    const autoPickDoneRef = useRef(false);
+
+    const selectCont = (id) => {
+        autoPickDoneRef.current = true;
+        setSelectedContId(id);
+    };
 
     useEffect(() => {
         const ac = new AbortController();
@@ -65,10 +73,48 @@ export default function Main() {
 
     // 3) 自動選択も contMetaData が入った後に
     useEffect(() => {
-        if (contMetaData.length > 0 && selectedContId == null) {
-            setSelectedContId(contMetaData[0].contId);
-        }
+        if (autoPickDoneRef.current) return;
+        // 条件を満たさないならタイマーは不要
+        if (contMetaData.length === 0 || selectedContId != null) return;
+
+        // 二重セット防止（StrictMode対策にもなる）
+        if (autoPickTimerRef.current != null) return;
+
+        autoPickTimerRef.current = window.setTimeout(() => {
+            // 発火時点でもう選択されてたら何もしない（最後の安全弁）
+            if (autoPickDoneRef.current) return;
+            if (contMetaData.length === 0) return;
+            if (selectedContId != null) return;
+
+            const i = Math.floor(Math.random() * contMetaData.length);
+            const id = contMetaData[i].contId;
+
+            // 自動選択はこの1回で終了
+            autoPickDoneRef.current = true;
+            setSelectedContId(id);
+
+            if (autoPickTimerRef.current != null) {
+                clearTimeout(autoPickTimerRef.current);
+                autoPickTimerRef.current = null;
+            }
+        }, 3000);
+
+        return () => {
+            if (autoPickTimerRef.current != null) {
+                clearTimeout(autoPickTimerRef.current);
+                autoPickTimerRef.current = null;
+            }
+        };
     }, [contMetaData, selectedContId]);
+
+    useEffect(() => {
+        if (selectedContId == null) return;
+
+        if (autoPickTimerRef.current != null) {
+            clearTimeout(autoPickTimerRef.current);
+            autoPickTimerRef.current = null;
+        }
+    }, [selectedContId]);
 
     // グラフの取得
     const [graph, setGraph] = useState(null);
