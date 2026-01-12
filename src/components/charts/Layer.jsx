@@ -63,35 +63,31 @@ export default function GraphLayer({ nodes, links, setSelectedContId }) {
                     {/* ---- nodes ---- */}
                     <g className="nodes">
                         {nodes.map((n) => (
-                            <g key={n.id} className="group cursor-pointer" onClick={() => setSelectedContId(n.id)}>
-                                {/* 当たり判定 */}
-                                <rect
-                                    x={n.x - 6}
-                                    y={n.y - 6}
-                                    width={6 + 8 + n.label.length * 6}
-                                    height={14}
-                                    fill="transparent"
-                                />
-
-                                {/* ノード */}
+                            <g key={n.id} className="group">
+                                {/* ノード（当たり判定はここだけ） */}
                                 <circle
                                     cx={n.x}
                                     cy={n.y}
-                                    r={6}
-                                    className="fill-blue-500 group-hover:fill-blue-600"
+                                    r={12}
+                                    className="cursor-pointer fill-blue-500 group-hover:fill-blue-600"
+                                    onClick={() => setSelectedContId(n.id)}
                                 />
 
-                                {/* ラベル */}
+                                {/* ラベル（表示のみ・当たり判定なし） */}
                                 <text
-                                    x={n.x + 8}
-                                    y={n.y + 4}
-                                    className="select-none text-[10px] fill-gray-800 opacity-80 group-hover:opacity-100"
+                                    x={n.x}
+                                    y={n.y - 12 - 2}
+                                    textAnchor="middle"
+                                    dominantBaseline="auto"
+                                    pointerEvents="none"
+                                    className="select-none text-[15px] fill-gray-800 opacity-80 group-hover:opacity-100"
                                 >
                                     {n.label}
                                 </text>
                             </g>
                         ))}
                     </g>
+
                 </g>
             </svg>
         </div>
