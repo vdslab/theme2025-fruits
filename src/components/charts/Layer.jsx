@@ -32,6 +32,13 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
         };
     }, [nodes, links]);
 
+    // 詳細画面をを閉じたらホバーも解除する
+    useEffect(() => {
+        if (selectedContId == null) {
+            setHoveredNodeId(null);
+        }
+    }, [selectedContId]);
+
     // // ---- Loading / 未初期化 ----
     if (!nodes || !links) {
         return (
