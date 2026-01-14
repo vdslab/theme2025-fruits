@@ -1,6 +1,6 @@
 import DetailContent from "./detail/DetailContent";
 import GraphLayer from "./charts/Layer";
-import SearchBox from "./SearchBox";
+import SearchBox from "./Controls/SearchBox";
 import HelpButton from "./Controls/HelpButton";
 import HelpModal from "./HelpModal";
 
