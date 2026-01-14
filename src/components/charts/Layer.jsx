@@ -90,6 +90,7 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
         );
     }
 
+
     return (
         <div className="h-full w-full bg-gray-50">
             <svg
@@ -148,7 +149,6 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                             const displayLabel = isActive
                                 ? n.label
                                 : truncateLabel(n.label, 7);
-
 
                             const isDimmed = activeNodeId && !isActive;
                             const r = isActive ? 14 : 12;
