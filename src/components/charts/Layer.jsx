@@ -2,6 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { select } from "d3-selection";
 import { zoom, zoomIdentity } from "d3-zoom";
 
+// 文字省略用の関数
+function truncateLabel(text, maxLength = 7) {
+    if (!text) return "";
+    return text.length > maxLength
+        ? text.slice(0, maxLength) + "…"
+        : text;
+}
+
 export default function GraphLayer({ nodes, links, selectedContId, setSelectedContId, }) {
     const svgRef = useRef(null);
     const viewportRef = useRef(null);
@@ -137,6 +145,11 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                                                 l.source.id === n.id)
                                     ));
 
+                            const displayLabel = isActive
+                                ? n.label
+                                : truncateLabel(n.label, 7);
+
+
                             const isDimmed = activeNodeId && !isActive;
                             const r = isActive ? 14 : 12;
 
@@ -188,17 +201,15 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                                         y={n.y - r - 2}
                                         textAnchor="middle"
                                         pointerEvents="none"
-                                        className={`
-                                            select-none
-                                            ${isActive
-                                                ? "text-[16px] fill-gray-900 opacity-100"
-                                                : isDimmed
-                                                    ? "text-[15px] fill-gray-500 opacity-70"
-                                                    : "text-[15px] fill-gray-800 opacity-80"
+                                        className={`select-none transition-all ${isActive
+                                            ? "text-[16px] fill-gray-900 opacity-100"
+                                            : isDimmed
+                                                ? "text-[15px] fill-gray-500 opacity-70"
+                                                : "text-[15px] fill-gray-800 opacity-80"
                                             }
-                                        `}
+    `}
                                     >
-                                        {n.label}
+                                        {displayLabel}
                                     </text>
                                 </g>
                             );
