@@ -202,7 +202,7 @@ export default function Main() {
     return (
         <div className="relative h-full">
             <div className="pointer-events-none absolute left-0 z-40">
-                <div className="pointer-events-auto  px-5 py-6">
+                <div className="pointer-events-auto  px-5 py-5">
                     <div className="flex items-center gap-2">
                         <SearchBox
                             contMetaData={contMetaData}
