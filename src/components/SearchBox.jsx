@@ -52,6 +52,11 @@ export default function SearchBox({ contMetaData, onSelectContId }) {
     };
 
     const onKeyDown = (e) => {
+        // IME変換中はEnterを無視
+        if (e.isComposing || e.keyCode === 229) {
+            return;
+        }
+
         if (e.key === "Escape") {
             setOpen(false);
             return;
