@@ -32,7 +32,7 @@ export default function DetailContent({ cont, onClose }) {
     return (
         <>
             {/* right panel */}
-            <aside className="fixed top-0 right-0 z-50 h-screen w-[360px] bg-base-100 shadow-2xl flex flex-col">
+            <aside className="absolute top-0 right-0 z-50 h-screen w-[360px] bg-base-100 shadow-2xl flex flex-col">
                 {/* header */}
                 <div className="p-4 border-b border-base-200 flex items-start gap-3">
                     <div className="flex-1 min-w-0">
