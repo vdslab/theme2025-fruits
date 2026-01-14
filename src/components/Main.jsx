@@ -128,9 +128,9 @@ export default function Main() {
     }, []);
 
     return (
-        <>
+        <div className="relative h-full">
             {/* ヘッダー/検索（グラフの上に重ねる） */}
-            <div className="pointer-events-none  left-0 z-40">
+            <div className="pointer-events-none absolute left-0 z-40 ">
                 <div className="pointer-events-auto px-4 py-3">
                     <SearchBox
                         contMetaData={contMetaData}
@@ -148,6 +148,6 @@ export default function Main() {
                 cont={selectedCont}
                 onClose={() => setSelectedContId(null)}
             />
-        </>
+        </div>
     );
 }
