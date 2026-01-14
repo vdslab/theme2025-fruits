@@ -193,6 +193,7 @@ export default function Main() {
             />
             <DetailContent
                 cont={selectedCont}
+                performanceById={performanceById}
                 onClose={() => setSelectedContId(null)}
             />
         </div>
