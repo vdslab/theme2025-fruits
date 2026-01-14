@@ -1,4 +1,3 @@
-// components/HelpModal.jsx
 export default function HelpModal({ isOpen, onClose }) {
     return (
         <dialog className="modal" open={isOpen}>
@@ -17,14 +16,55 @@ export default function HelpModal({ isOpen, onClose }) {
                     使い方 / このサイトについて
                 </h3>
 
-                <div className="mt-4 space-y-3 text-sm leading-relaxed">
-                    <p>ここにサイト全体の説明を書きます。</p>
+                <div className="mt-4 space-y-4 text-sm leading-relaxed">
+                    <p>
+                        このサイトは、YouTubeに公開されているラーメンズのコント作品を対象に、
+                        作品同士の関係性や特徴をグラフとして可視化し、自由に探索できるツールです。
+                    </p>
 
-                    <ul className="list-disc pl-5 space-y-1">
-                        <li>検索ボックスで絞り込みができます</li>
-                        <li>要素をクリックすると詳細が表示されます</li>
-                        <li>ドラッグやズーム操作が可能です</li>
-                    </ul>
+                    <section className="space-y-2">
+                        <h4 className="font-semibold">ラーメンズについて</h4>
+                        <p>
+                            小林賢太郎と片桐仁によるコントユニット。
+                            <br />
+                            衣装やセットに頼らず、言葉遊びや論理のズレ、不条理さを軸にした
+                            独自の世界観のコントで知られている。
+                            2020年に活動を終了。
+                        </p>
+                        <p>
+                            Youtubeチャンネル：
+                            <a
+                                href="https://www.youtube.com/channel/UCQ75mjyRYZbprTUwO5kP8ig"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="link link-primary ml-1"
+                            >
+                                ラーメンズ公式
+                            </a>
+                        </p>
+                    </section>
+
+                    <section className="space-y-2">
+                        <h4 className="font-semibold">基本操作</h4>
+                        <ul className="list-disc pl-5 space-y-1">
+                            <li>
+                                検索ボックスから作品名を入力すると、対象を絞り込めます
+                            </li>
+                            <li>
+                                円（ノード）をクリックすると、その作品の詳細が表示されます
+                            </li>
+                            <li>
+                                ドラッグで視点を動かし、ズームで全体像を確認できます
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section className="space-y-2">
+                        <h4 className="font-semibold">補足</h4>
+                        <p>
+                            何も選択していない場合、一定時間後に作品が自動で選ばれます。
+                        </p>
+                    </section>
                 </div>
             </div>
 
