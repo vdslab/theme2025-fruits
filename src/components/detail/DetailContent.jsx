@@ -43,12 +43,10 @@ export default function DetailContent({ cont, performanceById, onClose }) {
             {/* header */}
             <div className="p-4 border-base-200 flex items-start gap-3">
                 <div className="flex-1 min-w-0">
-                    {/* 公演名 */}
-                    <h1 className="text-lg font-bold break-words leading-snug">
+                    <h1 className="text-sm text-base-content/60 break-words">
                         {performanceName || "（公演名不明）"}
                     </h1>
 
-                    {/* タイトル */}
                     <h2 className="mt-1 text-base font-semibold break-words">
                         {cont.title}
                     </h2>
@@ -65,7 +63,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
             </div>
 
             {/* body */}
-            <div className="p-4 overflow-y-auto flex-1">
+            <div className="px-4 overflow-y-auto flex-1">
                 {/* youtube埋め込み */}
                 <div className="card bg-base-100">
                     <div className="card-body p-3">
