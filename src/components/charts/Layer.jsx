@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { select } from "d3-selection";
-import { zoom } from "d3-zoom";
+import { zoom, zoomIdentity } from "d3-zoom";
 
 export default function GraphLayer({ nodes, links, selectedContId, setSelectedContId, }) {
     const svgRef = useRef(null);
     const viewportRef = useRef(null);
+    const zoomBehaviorRef = useRef(null);
 
     const [hoveredNodeId, setHoveredNodeId] = useState(null);
 
@@ -18,13 +19,15 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
         const svg = select(svgRef.current);
         const viewport = select(viewportRef.current);
 
-        const zoomBehavior = zoom()
+        const zb = zoom()
             .scaleExtent([0.1, 5])
             .on("zoom", (event) => {
                 viewport.attr("transform", event.transform);
             });
 
-        svg.call(zoomBehavior);
+        zoomBehaviorRef.current = zb;
+
+        svg.call(zb);
         svg.on("dblclick.zoom", null);
 
         return () => {
@@ -32,12 +35,37 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
         };
     }, [nodes, links]);
 
+
     // 詳細画面をを閉じたらホバーも解除する
     useEffect(() => {
         if (selectedContId == null) {
             setHoveredNodeId(null);
         }
     }, [selectedContId]);
+
+
+    // ノードを選択したら画面中央に持ってくる
+    useEffect(() => {
+        if (!selectedContId) return;
+        if (!nodes || !zoomBehaviorRef.current) return;
+
+        const node = nodes.find(n => n.id === selectedContId);
+        if (!node) return;
+
+        const svg = select(svgRef.current);
+
+        const { innerWidth: w, innerHeight: h } = window;
+
+        const transform = zoomIdentity
+            .translate(w / 2 - node.x, h / 2 - node.y)
+            .scale(1);
+
+        svg
+            .transition()
+            .duration(600)
+            .call(zoomBehaviorRef.current.transform, transform);
+    }, [selectedContId, nodes]);
+
 
     // // ---- Loading / 未初期化 ----
     if (!nodes || !links) {
