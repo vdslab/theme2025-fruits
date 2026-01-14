@@ -10,7 +10,7 @@ function truncateLabel(text, maxLength = 5) {
         : text;
 }
 
-export default function GraphLayer({ nodes, links, selectedContId, setSelectedContId, }) {
+export default function GraphLayer({ nodes, links, selectedContId, onSelectedContId, }) {
     const svgRef = useRef(null);
     const viewportRef = useRef(null);
     const zoomBehaviorRef = useRef(null);
@@ -97,7 +97,7 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                         width={200000}
                         height={200000}
                         fill="transparent"
-                        onClick={() => setSelectedContId(null)}
+                        onClick={() => onSelectedContId(null)}
                     />
 
                     {/* ---- links ---- */}
@@ -222,7 +222,7 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                                                 : "fill-blue-500 opacity-40"
                                             }
     `}
-                                        onClick={() => setSelectedContId(n.id)}
+                                        onClick={() => onSelectedContId(n.id)}
                                     />
 
                                     {/* ラベル */}

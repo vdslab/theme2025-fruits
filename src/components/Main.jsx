@@ -49,8 +49,8 @@ export default function Main() {
                         props: r["小道具"] ?? "",
                         relatedPerformanceId: String(
                             r["関連性の強い公演(id)"] ??
-                                r["関連性の強い公演ID"] ??
-                                ""
+                            r["関連性の強い公演ID"] ??
+                            ""
                         ),
                         relatedPerformanceName: r["関連性の高い公演名"] ?? "",
                     }))
@@ -189,7 +189,7 @@ export default function Main() {
                 nodes={graph?.nodes ?? null}
                 links={graph?.links ?? null}
                 selectedContId={selectedContId}
-                setSelectedContId={selectCont}
+                onSelectedContId={selectCont}
             />
             <DetailContent
                 cont={selectedCont}
