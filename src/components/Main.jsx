@@ -53,8 +53,8 @@ export default function Main() {
                         props: r["小道具"] ?? "",
                         relatedPerformanceId: String(
                             r["関連性の強い公演(id)"] ??
-                            r["関連性の強い公演ID"] ??
-                            ""
+                                r["関連性の強い公演ID"] ??
+                                ""
                         ),
                         relatedPerformanceName: r["関連性の高い公演名"] ?? "",
                     }))
@@ -202,7 +202,7 @@ export default function Main() {
     return (
         <div className="relative h-full">
             <div className="pointer-events-none absolute left-0 z-40">
-                <div className="pointer-events-auto  px-2 py-2">
+                <div className="pointer-events-auto  px-5 py-6">
                     <div className="flex items-center gap-2">
                         <SearchBox
                             contMetaData={contMetaData}
