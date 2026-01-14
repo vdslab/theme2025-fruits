@@ -112,7 +112,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
 
                 {cont.duration ? (
                     <div className="card bg-base-100">
-                        <div className="card-body p-3">
+                        <div className="card-body p-2">
                             <div className="text-xs text-base-content/60">
                                 時間
                             </div>
@@ -122,7 +122,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                 ) : null}
 
                 <div className="mt-3 card bg-base-100">
-                    <div className="card-body p-3">
+                    <div className="card-body p-2">
                         <div className="text-xs text-base-content/60">
                             小道具
                         </div>
@@ -137,7 +137,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                 {/* 公演年 */}
                 {performanceYear ? (
                     <div className="card bg-base-100">
-                        <div className="card-body p-3">
+                        <div className="card-body p-2">
                             <div className="text-xs text-base-content/60">
                                 公演年
                             </div>
@@ -146,7 +146,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                     </div>
                 ) : (
                     <div className="card bg-base-100">
-                        <div className="card-body p-3">
+                        <div className="card-body p-2">
                             <div className="text-xs text-base-content/60">
                                 公演年
                             </div>
@@ -159,7 +159,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
 
                 {/* 公演都市 */}
                 <div className="mt-3 card bg-base-100">
-                    <div className="card-body p-3">
+                    <div className="card-body p-2">
                         <div className="text-xs text-base-content/60">
                             公演都市
                         </div>
