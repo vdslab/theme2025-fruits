@@ -189,7 +189,7 @@ export default function Main() {
                 nodes={graph?.nodes ?? null}
                 links={graph?.links ?? null}
                 selectedContId={selectedContId}
-                onSelectedContId={selectCont}
+                onSelectContId={selectCont}
             />
             <DetailContent
                 cont={selectedCont}
