@@ -41,7 +41,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
     return (
         <aside className="absolute top-0 right-0 z-50 h-screen w-[360px] bg-base-100 shadow-2xl flex flex-col">
             {/* header */}
-            <div className="p-4 border-b border-base-200 flex items-start gap-3">
+            <div className="p-4 border-base-200 flex items-start gap-3">
                 <div className="flex-1 min-w-0">
                     {/* 公演名 */}
                     <h1 className="text-lg font-bold break-words leading-snug">
@@ -67,7 +67,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
             {/* body */}
             <div className="p-4 overflow-y-auto flex-1">
                 {/* youtube埋め込み */}
-                <div className="card bg-base-100 border border-base-200">
+                <div className="card bg-base-100">
                     <div className="card-body p-3">
                         {embedUrl ? (
                             <div className="w-full aspect-video rounded-box overflow-hidden">
@@ -99,7 +99,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
 
                 {/* コントの時間 */}
                 {cont.duration ? (
-                    <div className="mt-4 card bg-base-100 border border-base-200">
+                    <div className="mt-4 card bg-base-100">
                         <div className="card-body p-3">
                             <div className="text-xs text-base-content/60">
                                 コントの時間
@@ -113,7 +113,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
 
                 {/* 公演年 */}
                 {performanceYear ? (
-                    <div className="card bg-base-100 border border-base-200">
+                    <div className="card bg-base-100">
                         <div className="card-body p-3">
                             <div className="text-xs text-base-content/60">
                                 公演年
@@ -122,7 +122,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                         </div>
                     </div>
                 ) : (
-                    <div className="card bg-base-100 border border-base-200">
+                    <div className="card bg-base-100">
                         <div className="card-body p-3">
                             <div className="text-xs text-base-content/60">
                                 公演年
@@ -135,7 +135,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                 )}
 
                 {/* 公演都市 */}
-                <div className="mt-3 card bg-base-100 border border-base-200">
+                <div className="mt-3 card bg-base-100">
                     <div className="card-body p-3">
                         <div className="text-xs text-base-content/60">
                             公演都市
@@ -147,7 +147,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                 </div>
 
                 {/* 公演DVD（URL） */}
-                <div className="mt-3 card bg-base-100 border border-base-200">
+                <div className="mt-3 card bg-base-100 ">
                     <div className="card-body p-3">
                         <div className="text-xs text-base-content/60">
                             公演DVD
