@@ -90,6 +90,16 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                 viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
             >
                 <g ref={viewportRef}>
+                    {/* 背景（何もない場所のクリック用） */}
+                    <rect
+                        x={-100000}
+                        y={-100000}
+                        width={200000}
+                        height={200000}
+                        fill="transparent"
+                        onClick={() => setSelectedContId(null)}
+                    />
+
                     {/* ---- links ---- */}
                     <g className="links">
                         {links.map((l, i) => {
