@@ -10,7 +10,7 @@ function truncateLabel(text, maxLength = 5) {
         : text;
 }
 
-export default function GraphLayer({ nodes, links, selectedContId, setSelectedContId, }) {
+export default function GraphLayer({ nodes, links, selectedContId, onSelectContId }) {
     const svgRef = useRef(null);
     const viewportRef = useRef(null);
     const zoomBehaviorRef = useRef(null);
@@ -73,7 +73,7 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
             .call(zoomBehaviorRef.current.transform, transform);
     }, [selectedContId, nodes]);
 
-    // // ---- Loading / 未初期化 ----
+    // ---- Loading / 未初期化 ----
     if (!nodes || !links) {
         return (
             <div className="flex h-full w-full items-center justify-center text-sm text-gray-500">
@@ -90,9 +90,21 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                 viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
             >
                 <g ref={viewportRef}>
+                    {/* 背景（何もない場所のクリック用） */}
+                    <rect
+                        x={-100000}
+                        y={-100000}
+                        width={200000}
+                        height={200000}
+                        fill="transparent"
+                        onClick={() => onSelectContId(null)}
+                    />
+
                     {/* ---- links ---- */}
                     <g className="links">
                         {links.map((l, i) => {
+                            const hasSelection = selectedContId != null;
+
                             const isSelectedEdge =
                                 selectedContId &&
                                 (l.source.id === selectedContId ||
@@ -103,6 +115,16 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                                 (l.source.id === hoveredNodeId ||
                                     l.target.id === hoveredNodeId);
 
+                            const emphasis = !hasSelection
+                                ? isHoveredEdge
+                                    ? "high"
+                                    : "medium"
+                                : isSelectedEdge
+                                    ? "high"
+                                    : isHoveredEdge
+                                        ? "medium"
+                                        : "low";
+
                             return (
                                 <line
                                     key={i}
@@ -111,16 +133,16 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                                     x2={l.target.x}
                                     y2={l.target.y}
                                     className={
-                                        isSelectedEdge
+                                        emphasis === "high"
                                             ? "stroke-gray-500 opacity-100"
-                                            : isHoveredEdge
+                                            : emphasis === "medium"
                                                 ? "stroke-gray-400 opacity-60"
                                                 : "stroke-gray-400 opacity-10"
                                     }
                                     strokeWidth={
-                                        isSelectedEdge
+                                        emphasis === "high"
                                             ? 2 + 2 * l.weight
-                                            : isHoveredEdge
+                                            : emphasis === "medium"
                                                 ? 1.5 + 2 * l.weight
                                                 : 1 + 2 * l.weight
                                     }
@@ -154,11 +176,17 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                                     ));
 
                             // 強調の強さ
-                            const emphasis = isSelected
-                                ? "high"
-                                : (isHovered || isNeighbor)
-                                    ? "medium"
-                                    : "low";
+                            const hasSelection = selectedContId != null;
+
+                            const emphasis = !hasSelection
+                                ? (isHovered || isNeighbor)
+                                    ? "high"
+                                    : "medium"
+                                : isSelected
+                                    ? "high"
+                                    : (isHovered || isNeighbor)
+                                        ? "medium"
+                                        : "low";
 
                             // ノードの大きさ
                             const r =
@@ -169,19 +197,19 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                                         : 12;
 
                             const displayLabel =
-                                emphasis === "low"
-                                    ? truncateLabel(n.label, 6)
-                                    : n.label;
+                                !hasSelection
+                                    ? (isHovered || isNeighbor
+                                        ? n.label
+                                        : truncateLabel(n.label, 6))
+                                    : emphasis === "low"
+                                        ? truncateLabel(n.label, 6)
+                                        : n.label;
 
                             return (
                                 <g
                                     key={n.id}
-                                    onMouseEnter={() =>
-                                        setHoveredNodeId(n.id)
-                                    }
-                                    onMouseLeave={() =>
-                                        setHoveredNodeId(null)
-                                    }
+                                    onMouseEnter={() => setHoveredNodeId(n.id)}
+                                    onMouseLeave={() => setHoveredNodeId(null)}
                                 >
                                     {/* 外枠を追加（選択中） */}
                                     {isSelected && (
@@ -210,9 +238,8 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                                             : emphasis === "medium"
                                                 ? "fill-blue-500 opacity-85"
                                                 : "fill-blue-500 opacity-40"
-                                            }
-    `}
-                                        onClick={() => setSelectedContId(n.id)}
+                                            }`}
+                                        onClick={() => onSelectContId(n.id)}
                                     />
 
                                     {/* ラベル */}
@@ -221,15 +248,12 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                                         y={n.y - r - 6}
                                         textAnchor="middle"
                                         pointerEvents="none"
-                                        className={`
-                                            select-none transition-all
-                                            ${emphasis === "high"
-                                                ? "text-[16px] fill-gray-900 opacity-100"
-                                                : emphasis === "medium"
-                                                    ? "text-[15px] fill-gray-800 opacity-90"
-                                                    : "text-[14px] fill-gray-500 opacity-70"
-                                            }
-                                        `}
+                                        className={`select-none transition-all ${emphasis === "high"
+                                            ? "text-[16px] fill-gray-900 opacity-100"
+                                            : emphasis === "medium"
+                                                ? "text-[15px] fill-gray-800 opacity-90"
+                                                : "text-[14px] fill-gray-500 opacity-70"
+                                            }`}
                                     >
                                         {displayLabel}
                                     </text>
