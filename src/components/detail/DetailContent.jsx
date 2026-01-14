@@ -121,18 +121,16 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                     </div>
                 ) : null}
 
-                {cont.props ? (
-                    <div className="mt-3 card bg-base-100 border border-base-200">
-                        <div className="card-body p-3">
-                            <div className="text-xs text-base-content/60">
-                                小道具
-                            </div>
-                            <div className="text-sm break-words">
-                                {cont.props}
-                            </div>
+                <div className="mt-3 card bg-base-100">
+                    <div className="card-body p-3">
+                        <div className="text-xs text-base-content/60">
+                            小道具
+                        </div>
+                        <div className="text-sm break-words">
+                            {cont.props ? cont.props : "なし"}
                         </div>
                     </div>
-                ) : null}
+                </div>
 
                 <div className="divider my-4">公演情報</div>
 
