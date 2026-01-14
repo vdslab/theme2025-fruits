@@ -64,7 +64,7 @@ export default function SearchBox({ contMetaData, onSelectContId }) {
     };
 
     return (
-        <div ref={rootRef} className="relative w-[min(720px,92vw)]">
+        <div ref={rootRef} className="relative w-[min(450px,40vw)]">
             <input
                 value={query}
                 onChange={(e) => {
