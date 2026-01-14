@@ -183,11 +183,13 @@ export default function Main() {
         <div className="relative h-full">
             <div className="pointer-events-none absolute left-0 z-40">
                 <div className="pointer-events-auto  px-2 py-2">
-                    <SearchBox
-                        contMetaData={contMetaData}
-                        onSelectContId={selectCont}
-                    />
-                    <HelpButton onOpen={() => setIsHelpOpen(true)} />
+                    <div className="flex items-center gap-2">
+                        <SearchBox
+                            contMetaData={contMetaData}
+                            onSelectContId={selectCont}
+                        />
+                        <HelpButton onOpen={() => setIsHelpOpen(true)} />
+                    </div>
                 </div>
             </div>
             <GraphLayer
