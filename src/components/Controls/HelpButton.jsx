@@ -4,7 +4,7 @@ export default function HelpButton({ onOpen }) {
         <button
             type="button"
             onClick={onOpen}
-            className="btn btn-circle btn-sm btn-ghost"
+            className="btn btn-sm btn-circle bg-base-250 hover:bg-base-400"
             aria-label="ヘルプを開く"
             title="使い方"
         >
