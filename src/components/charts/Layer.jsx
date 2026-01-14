@@ -54,10 +54,16 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
 
         const svg = select(svgRef.current);
 
+        const PANEL_WIDTH = 360;
+
         const { innerWidth: w, innerHeight: h } = window;
 
+        // グラフとして使える領域の中心
+        const centerX = (w - PANEL_WIDTH) / 2;
+        const centerY = h / 2;
+
         const transform = zoomIdentity
-            .translate(w / 2 - node.x, h / 2 - node.y)
+            .translate(centerX - node.x, centerY - node.y)
             .scale(1);
 
         svg
