@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { csvParse } from "d3-dsv";
 
 export default function Main() {
-    const [isHelpOpen, setIsHelpOpen] = useState(false);
+    const [isHelpOpen, setIsHelpOpen] = useState(true);
 
     const [contMetaData, setContMetaData] = useState([]);
     const [selectedContId, setSelectedContId] = useState(null);
