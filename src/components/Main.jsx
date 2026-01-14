@@ -125,11 +125,29 @@ export default function Main() {
         return m;
     }, [performanceMetaData]);
 
+    // ヘルプが閉じたことを記録
+    const helpClosedOnceRef = useRef(false);
+    useEffect(() => {
+        if (!isHelpOpen && !helpClosedOnceRef.current) {
+            helpClosedOnceRef.current = true;
+        }
+    }, [isHelpOpen]);
+
     // 自動選択
     useEffect(() => {
         if (autoPickDoneRef.current) return;
         // 条件を満たさないならタイマーは不要
         if (contMetaData.length === 0 || selectedContId != null) return;
+        if (!helpClosedOnceRef.current) return;
+
+        // 追加：ヘルプが開いている間はタイマーを動かさない（推奨）
+        if (isHelpOpen) {
+            if (autoPickTimerRef.current != null) {
+                clearTimeout(autoPickTimerRef.current);
+                autoPickTimerRef.current = null;
+            }
+            return;
+        }
 
         // 二重セット防止（StrictMode対策にもなる）
         if (autoPickTimerRef.current != null) return;
@@ -139,6 +157,8 @@ export default function Main() {
             if (autoPickDoneRef.current) return;
             if (contMetaData.length === 0) return;
             if (selectedContId != null) return;
+            if (!helpClosedOnceRef.current) return;
+            if (isHelpOpen) return;
 
             const i = Math.floor(Math.random() * contMetaData.length);
             const id = contMetaData[i].contId;
@@ -159,7 +179,7 @@ export default function Main() {
                 autoPickTimerRef.current = null;
             }
         };
-    }, [contMetaData, selectedContId]);
+    }, [contMetaData, selectedContId, isHelpOpen]);
 
     useEffect(() => {
         if (selectedContId == null) return;
