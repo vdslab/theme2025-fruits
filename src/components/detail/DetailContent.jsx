@@ -38,13 +38,6 @@ export default function DetailContent({ cont, performanceById, onClose }) {
     const performanceCityRaw = perf?.performanceCity ?? "";
     const performanceUrl = perf?.url ?? "";
 
-    const performanceCities = performanceCityRaw
-        ? performanceCityRaw
-              .split(",")
-              .map((s) => s.trim())
-              .filter(Boolean)
-        : [];
-
     return (
         <aside className="absolute top-0 right-0 z-50 h-screen w-[360px] bg-base-100 shadow-2xl flex flex-col">
             {/* header */}
@@ -142,38 +135,16 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                 )}
 
                 {/* 公演都市 */}
-                {performanceCities.length > 0 ? (
-                    <div className="mt-3 card bg-base-100 border border-base-200">
-                        <div className="card-body p-3">
-                            <div className="text-xs text-base-content/60">
-                                公演都市
-                            </div>
-
-                            {/* バッジ表示 */}
-                            <div className="mt-1 flex flex-wrap gap-2">
-                                {performanceCities.map((city) => (
-                                    <span
-                                        key={city}
-                                        className="badge badge-outline"
-                                    >
-                                        {city}
-                                    </span>
-                                ))}
-                            </div>
+                <div className="mt-3 card bg-base-100 border border-base-200">
+                    <div className="card-body p-3">
+                        <div className="text-xs text-base-content/60">
+                            公演都市
+                        </div>
+                        <div className="text-sm break-words">
+                            {performanceCityRaw || "情報がありません"}
                         </div>
                     </div>
-                ) : (
-                    <div className="mt-3 card bg-base-100 border border-base-200">
-                        <div className="card-body p-3">
-                            <div className="text-xs text-base-content/60">
-                                公演都市
-                            </div>
-                            <div className="text-sm text-base-content/60">
-                                情報がありません
-                            </div>
-                        </div>
-                    </div>
-                )}
+                </div>
 
                 {/* 公演DVD（URL） */}
                 <div className="mt-3 card bg-base-100 border border-base-200">
