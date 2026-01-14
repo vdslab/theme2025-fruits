@@ -3,7 +3,7 @@ import { select } from "d3-selection";
 import { zoom, zoomIdentity } from "d3-zoom";
 
 // 文字省略用の関数
-function truncateLabel(text, maxLength = 7) {
+function truncateLabel(text, maxLength = 5) {
     if (!text) return "";
     return text.length > maxLength
         ? text.slice(0, maxLength) + "…"
@@ -170,7 +170,7 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
 
                             const displayLabel =
                                 emphasis === "low"
-                                    ? truncateLabel(n.label, 7)
+                                    ? truncateLabel(n.label, 6)
                                     : n.label;
 
                             return (
@@ -183,37 +183,42 @@ export default function GraphLayer({ nodes, links, selectedContId, setSelectedCo
                                         setHoveredNodeId(null)
                                     }
                                 >
-                                    {/* 下地（エッジ遮断用） */}
-                                    <circle
-                                        cx={n.x}
-                                        cy={n.y}
-                                        r={r}
-                                        fill="white"
-                                    />
+                                    {/* 外枠を追加（選択中） */}
+                                    {isSelected && (
+                                        <circle
+                                            cx={n.x}
+                                            cy={n.y}
+                                            r={r + 2}
+                                            fill="none"
+                                            stroke="rgba(59, 130, 246)"
+                                            strokeWidth={4}
+                                        />
+                                    )}
+
+                                    {/* 下地 */}
+                                    <circle cx={n.x} cy={n.y} r={r} fill="white" />
 
                                     {/* ノード本体 */}
                                     <circle
                                         cx={n.x}
                                         cy={n.y}
                                         r={r}
-                                        className={`
-                                            cursor-pointer transition-all
-                                            ${emphasis === "high"
-                                                ? "fill-blue-700"
-                                                : emphasis === "medium"
-                                                    ? "fill-blue-500"
-                                                    : "fill-blue-400 opacity-60"
+                                        stroke={isSelected ? "white" : "none"}
+                                        strokeWidth={isSelected ? 3 : 0}
+                                        className={`cursor-pointer transition-all ${emphasis === "high"
+                                            ? "fill-blue-500"
+                                            : emphasis === "medium"
+                                                ? "fill-blue-500 opacity-85"
+                                                : "fill-blue-500 opacity-40"
                                             }
-                                        `}
-                                        onClick={() =>
-                                            setSelectedContId(n.id)
-                                        }
+    `}
+                                        onClick={() => setSelectedContId(n.id)}
                                     />
 
                                     {/* ラベル */}
                                     <text
                                         x={n.x}
-                                        y={n.y - r - 2}
+                                        y={n.y - r - 6}
                                         textAnchor="middle"
                                         pointerEvents="none"
                                         className={`
