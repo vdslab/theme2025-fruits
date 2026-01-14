@@ -1,7 +1,7 @@
 export default function HelpModal({ isOpen, onClose }) {
     return (
         <dialog className="modal" open={isOpen}>
-            <div className="modal-box relative">
+            <div className="modal-box relative max-w-3xl">
                 {/* 右上の × ボタン */}
                 <button
                     type="button"
@@ -12,10 +12,9 @@ export default function HelpModal({ isOpen, onClose }) {
                     ✕
                 </button>
 
-                <h3 className="font-bold text-lg">
+                <h2 className="text-xl font-bold tracking-tight border-b border-gray-300 pb-2">
                     使い方 / このサイトについて
-                </h3>
-
+                </h2>
                 <div className="mt-4 space-y-4 text-sm leading-relaxed">
                     <p>
                         このサイトは、YouTubeに公開されているラーメンズのコント作品を対象に、
