@@ -95,14 +95,41 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                     </div>
                 </div>
 
-                {/* コントの時間 */}
-                {cont.duration ? (
-                    <div className="mt-4 card bg-base-100">
+                {/* {cont.summary ? (
+                    <div className="mt-4 card bg-base-100 border border-base-200">
                         <div className="card-body p-3">
                             <div className="text-xs text-base-content/60">
-                                コントの時間
+                                あらすじ
+                            </div>
+                            <p className="mt-1 text-sm leading-relaxed">
+                                {cont.summary}
+                            </p>
+                        </div>
+                    </div>
+                ) : null} */}
+
+                <div className="divider my-4">コント情報</div>
+
+                {cont.duration ? (
+                    <div className="card bg-base-100">
+                        <div className="card-body p-3">
+                            <div className="text-xs text-base-content/60">
+                                時間
                             </div>
                             <div className="text-sm">{cont.duration}</div>
+                        </div>
+                    </div>
+                ) : null}
+
+                {cont.props ? (
+                    <div className="mt-3 card bg-base-100 border border-base-200">
+                        <div className="card-body p-3">
+                            <div className="text-xs text-base-content/60">
+                                小道具
+                            </div>
+                            <div className="text-sm break-words">
+                                {cont.props}
+                            </div>
                         </div>
                     </div>
                 ) : null}
