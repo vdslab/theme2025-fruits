@@ -116,7 +116,9 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                                     l.target.id === hoveredNodeId);
 
                             const emphasis = !hasSelection
-                                ? "medium"
+                                ? isHoveredEdge
+                                    ? "high"
+                                    : "medium"
                                 : isSelectedEdge
                                     ? "high"
                                     : isHoveredEdge
@@ -177,7 +179,9 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                             const hasSelection = selectedContId != null;
 
                             const emphasis = !hasSelection
-                                ? "medium"
+                                ? (isHovered || isNeighbor)
+                                    ? "high"
+                                    : "medium"
                                 : isSelected
                                     ? "high"
                                     : (isHovered || isNeighbor)
@@ -193,9 +197,13 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                                         : 12;
 
                             const displayLabel =
-                                emphasis === "low"
-                                    ? truncateLabel(n.label, 6)
-                                    : n.label;
+                                !hasSelection
+                                    ? (isHovered || isNeighbor
+                                        ? n.label
+                                        : truncateLabel(n.label, 6))
+                                    : emphasis === "low"
+                                        ? truncateLabel(n.label, 6)
+                                        : n.label;
 
                             return (
                                 <g
