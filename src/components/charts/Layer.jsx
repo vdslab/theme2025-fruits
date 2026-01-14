@@ -196,15 +196,6 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                                         ? 13
                                         : 12;
 
-                            const displayLabel =
-                                !hasSelection
-                                    ? (isHovered || isNeighbor
-                                        ? n.label
-                                        : truncateLabel(n.label, 6))
-                                    : emphasis === "low"
-                                        ? truncateLabel(n.label, 6)
-                                        : n.label;
-
                             return (
                                 <g
                                     key={n.id}
@@ -241,23 +232,79 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                                             }`}
                                         onClick={() => onSelectContId(n.id)}
                                     />
-
-                                    {/* ラベル */}
-                                    <text
-                                        x={n.x}
-                                        y={n.y - r - 6}
-                                        textAnchor="middle"
-                                        pointerEvents="none"
-                                        className={`select-none transition-all ${emphasis === "high"
-                                            ? "text-[16px] fill-gray-900 opacity-100"
-                                            : emphasis === "medium"
-                                                ? "text-[15px] fill-gray-800 opacity-90"
-                                                : "text-[14px] fill-gray-500 opacity-70"
-                                            }`}
-                                    >
-                                        {displayLabel}
-                                    </text>
                                 </g>
+                            );
+                        })}
+                    </g>
+
+                    {/* ---- labels ---- */}
+                    <g className="labels">
+                        {nodes.map((n) => {
+                            const isSelected = selectedContId === n.id;
+                            const isHovered = hoveredNodeId === n.id;
+
+                            const isNeighbor =
+                                (selectedContId &&
+                                    links.some(
+                                        (l) =>
+                                            (l.source.id === selectedContId &&
+                                                l.target.id === n.id) ||
+                                            (l.target.id === selectedContId &&
+                                                l.source.id === n.id)
+                                    )) ||
+                                (hoveredNodeId &&
+                                    links.some(
+                                        (l) =>
+                                            (l.source.id === hoveredNodeId &&
+                                                l.target.id === n.id) ||
+                                            (l.target.id === hoveredNodeId &&
+                                                l.source.id === n.id)
+                                    ));
+
+                            const hasSelection = selectedContId != null;
+
+                            const emphasis = !hasSelection
+                                ? (isHovered || isNeighbor)
+                                    ? "high"
+                                    : "medium"
+                                : isSelected
+                                    ? "high"
+                                    : (isHovered || isNeighbor)
+                                        ? "medium"
+                                        : "low";
+
+                            const r =
+                                emphasis === "high"
+                                    ? 14
+                                    : emphasis === "medium"
+                                        ? 13
+                                        : 12;
+
+                            const displayLabel =
+                                !hasSelection
+                                    ? (isHovered || isNeighbor
+                                        ? n.label
+                                        : truncateLabel(n.label, 6))
+                                    : emphasis === "low"
+                                        ? truncateLabel(n.label, 6)
+                                        : n.label;
+
+                            return (
+                                <text
+                                    key={n.id}
+                                    x={n.x}
+                                    y={n.y - r - 6}
+                                    textAnchor="middle"
+                                    pointerEvents="none"
+                                    className={`select-none transition-all ${emphasis === "high"
+                                        ? "text-[16px] fill-gray-900 opacity-100"
+                                        : emphasis === "medium"
+                                            ? "text-[15px] fill-gray-800 opacity-90"
+                                            : "text-[14px] fill-gray-500 opacity-70"
+                                        }`}
+                                >
+                                    {displayLabel}
+                                </text>
                             );
                         })}
                     </g>
