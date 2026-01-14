@@ -1,12 +1,16 @@
 import DetailContent from "./detail/DetailContent";
 import GraphLayer from "./charts/Layer";
 import SearchBox from "./SearchBox";
+import HelpButton from "./Controls/HelpButton";
+import HelpModal from "./HelpModal";
 
 import { buildGraph } from "../lib/buildGraph";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { csvParse } from "d3-dsv";
 
 export default function Main() {
+    const [isHelpOpen, setIsHelpOpen] = useState(false);
+
     const [contMetaData, setContMetaData] = useState([]);
     const [selectedContId, setSelectedContId] = useState(null);
 
@@ -182,6 +186,11 @@ export default function Main() {
                     <SearchBox
                         contMetaData={contMetaData}
                         onSelectContId={selectCont}
+                    />
+                    <HelpButton onOpen={() => setIsHelpOpen(true)} />
+                    <HelpModal
+                        isOpen={isHelpOpen}
+                        onClose={() => setIsHelpOpen(false)}
                     />
                 </div>
             </div>
