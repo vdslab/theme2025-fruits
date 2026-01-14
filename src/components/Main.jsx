@@ -188,10 +188,6 @@ export default function Main() {
                         onSelectContId={selectCont}
                     />
                     <HelpButton onOpen={() => setIsHelpOpen(true)} />
-                    <HelpModal
-                        isOpen={isHelpOpen}
-                        onClose={() => setIsHelpOpen(false)}
-                    />
                 </div>
             </div>
             <GraphLayer
@@ -204,6 +200,10 @@ export default function Main() {
                 cont={selectedCont}
                 performanceById={performanceById}
                 onClose={() => setSelectedContId(null)}
+            />
+            <HelpModal
+                isOpen={isHelpOpen}
+                onClose={() => setIsHelpOpen(false)}
             />
         </div>
     );
