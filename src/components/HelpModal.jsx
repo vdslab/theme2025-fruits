@@ -59,7 +59,7 @@ export default function HelpModal({ isOpen, onClose }) {
                     </section>
 
                     <section className="space-y-2">
-                        <h4 className="font-semibold">補足</h4>
+                        <h4 className="font-semibold">表示について</h4>
                         <p>
                             何も選択していない場合、一定時間後に作品が自動で選ばれます。
                         </p>
