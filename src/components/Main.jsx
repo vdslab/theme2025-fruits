@@ -1,12 +1,16 @@
 import DetailContent from "./detail/DetailContent";
 import GraphLayer from "./charts/Layer";
 import SearchBox from "./SearchBox";
+import HelpButton from "./Controls/HelpButton";
+import HelpModal from "./HelpModal";
 
 import { buildGraph } from "../lib/buildGraph";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { csvParse } from "d3-dsv";
 
 export default function Main() {
+    const [isHelpOpen, setIsHelpOpen] = useState(true);
+
     const [contMetaData, setContMetaData] = useState([]);
     const [selectedContId, setSelectedContId] = useState(null);
 
@@ -121,11 +125,29 @@ export default function Main() {
         return m;
     }, [performanceMetaData]);
 
+    // ヘルプが閉じたことを記録
+    const helpClosedOnceRef = useRef(false);
+    useEffect(() => {
+        if (!isHelpOpen && !helpClosedOnceRef.current) {
+            helpClosedOnceRef.current = true;
+        }
+    }, [isHelpOpen]);
+
     // 自動選択
     useEffect(() => {
         if (autoPickDoneRef.current) return;
         // 条件を満たさないならタイマーは不要
         if (contMetaData.length === 0 || selectedContId != null) return;
+        if (!helpClosedOnceRef.current) return;
+
+        // 追加：ヘルプが開いている間はタイマーを動かさない（推奨）
+        if (isHelpOpen) {
+            if (autoPickTimerRef.current != null) {
+                clearTimeout(autoPickTimerRef.current);
+                autoPickTimerRef.current = null;
+            }
+            return;
+        }
 
         // 二重セット防止（StrictMode対策にもなる）
         if (autoPickTimerRef.current != null) return;
@@ -135,6 +157,8 @@ export default function Main() {
             if (autoPickDoneRef.current) return;
             if (contMetaData.length === 0) return;
             if (selectedContId != null) return;
+            if (!helpClosedOnceRef.current) return;
+            if (isHelpOpen) return;
 
             const i = Math.floor(Math.random() * contMetaData.length);
             const id = contMetaData[i].contId;
@@ -155,7 +179,7 @@ export default function Main() {
                 autoPickTimerRef.current = null;
             }
         };
-    }, [contMetaData, selectedContId]);
+    }, [contMetaData, selectedContId, isHelpOpen]);
 
     useEffect(() => {
         if (selectedContId == null) return;
@@ -179,10 +203,13 @@ export default function Main() {
         <div className="relative h-full">
             <div className="pointer-events-none absolute left-0 z-40">
                 <div className="pointer-events-auto  px-2 py-2">
-                    <SearchBox
-                        contMetaData={contMetaData}
-                        onSelectContId={selectCont}
-                    />
+                    <div className="flex items-center gap-2">
+                        <SearchBox
+                            contMetaData={contMetaData}
+                            onSelectContId={selectCont}
+                        />
+                        <HelpButton onOpen={() => setIsHelpOpen(true)} />
+                    </div>
                 </div>
             </div>
             <GraphLayer
@@ -195,6 +222,10 @@ export default function Main() {
                 cont={selectedCont}
                 performanceById={performanceById}
                 onClose={() => setSelectedContId(null)}
+            />
+            <HelpModal
+                isOpen={isHelpOpen}
+                onClose={() => setIsHelpOpen(false)}
             />
         </div>
     );
