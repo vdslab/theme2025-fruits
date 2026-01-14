@@ -131,7 +131,7 @@ export default function Main() {
         <>
             {/* ヘッダー/検索（グラフの上に重ねる） */}
             <div className="pointer-events-none  left-0 z-40">
-                <div className="pointer-events-auto px-4 pt-3 pb-3">
+                <div className="pointer-events-auto px-4 py-3">
                     <SearchBox
                         contMetaData={contMetaData}
                         onSelectContId={selectCont}
