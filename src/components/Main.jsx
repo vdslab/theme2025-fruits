@@ -1,5 +1,7 @@
 import DetailContent from "./detail/DetailContent";
 import GraphLayer from "./charts/Layer";
+import SearchBox from "./SearchBox";
+
 import { buildGraph } from "../lib/buildGraph";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { csvParse } from "d3-dsv";
@@ -44,8 +46,8 @@ export default function Main() {
                         props: r["小道具"] ?? "",
                         relatedPerformanceId: String(
                             r["関連性の強い公演(id)"] ??
-                            r["関連性の強い公演ID"] ??
-                            ""
+                                r["関連性の強い公演ID"] ??
+                                ""
                         ),
                         relatedPerformanceName: r["関連性の高い公演名"] ?? "",
                     }))
@@ -126,7 +128,16 @@ export default function Main() {
     }, []);
 
     return (
-        <>
+        <div className="relative h-full">
+            {/* ヘッダー/検索（グラフの上に重ねる） */}
+            <div className="pointer-events-none absolute left-0 z-40">
+                <div className="pointer-events-auto  px-2 py-2">
+                    <SearchBox
+                        contMetaData={contMetaData}
+                        onSelectContId={selectCont}
+                    />
+                </div>
+            </div>
             <GraphLayer
                 nodes={graph?.nodes ?? null}
                 links={graph?.links ?? null}
@@ -137,6 +148,6 @@ export default function Main() {
                 cont={selectedCont}
                 onClose={() => setSelectedContId(null)}
             />
-        </>
+        </div>
     );
 }
