@@ -30,10 +30,12 @@ export async function buildGraph({ width, height }) {
             "link",
             d3.forceLink(links)
                 .id(d => d.id)
-                .distance(d => 300 * (1 - d.weight))
+                .distance(d => 50 + 400 * Math.pow(1 - d.weight, 2))
+                .strength(d => d.weight)
         )
-        .force("charge", d3.forceManyBody().strength(-200))
-        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("charge", d3.forceManyBody().strength(-400))
+        .force("collision", d3.forceCollide().radius(18))
+        .force("center", d3.forceCenter(width / 2, height / 2).strength(0.05))
         .stop();
 
     for (let i = 0; i < 300; i++) sim.tick();
