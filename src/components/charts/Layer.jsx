@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { select } from "d3-selection";
 import { zoom, zoomIdentity } from "d3-zoom";
+import { getContNodeClass } from "../../lib/getContNodeClass";
+
 
 // 文字省略用の関数
 function truncateLabel(text, maxLength = 5) {
@@ -222,14 +224,7 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                                         cx={n.x}
                                         cy={n.y}
                                         r={r}
-                                        stroke={isSelected ? "white" : "none"}
-                                        strokeWidth={isSelected ? 3 : 0}
-                                        className={`cursor-pointer transition-all ${emphasis === "high"
-                                            ? "fill-blue-500"
-                                            : emphasis === "medium"
-                                                ? "fill-blue-500 opacity-85"
-                                                : "fill-blue-500 opacity-40"
-                                            }`}
+                                        className={`cursor-pointer transition-all ${getContNodeClass(n.performanceId, emphasis)}`}
                                         onClick={() => onSelectContId(n.id)}
                                     />
                                 </g>
