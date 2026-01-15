@@ -24,6 +24,7 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
         const svg = select(svgRef.current);
         const viewport = select(viewportRef.current);
 
+        // ---- zoom behavior ----
         const zb = zoom()
             .scaleExtent([0.1, 5])
             .on("zoom", (event) => {
@@ -35,6 +36,43 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
         svg.call(zb);
         svg.on("dblclick.zoom", null);
 
+        // =========================
+        // 初期ズーム（bounding box から自動計算）
+        // =========================
+
+        // ノード座標の範囲を計算
+        const xs = nodes.map((n) => n.x);
+        const ys = nodes.map((n) => n.y);
+
+        const minX = Math.min(...xs);
+        const maxX = Math.max(...xs);
+        const minY = Math.min(...ys);
+        const maxY = Math.max(...ys);
+
+        const graphWidth = maxX - minX;
+        const graphHeight = maxY - minY;
+
+        const { innerWidth: w, innerHeight: h } = window;
+
+        // 少し余白を持たせる
+        const MARGIN = 200;
+
+        const scale = Math.min(
+            w / (graphWidth + MARGIN),
+            h / (graphHeight + MARGIN),
+            1.2 // 拡大しすぎ防止
+        );
+
+        const translateX = w / 2 - scale * (minX + maxX) / 2;
+        const translateY = h / 2 - scale * (minY + maxY) / 2;
+
+        const initialTransform = zoomIdentity
+            .translate(translateX, translateY)
+            .scale(scale);
+
+        svg.call(zb.transform, initialTransform);
+
+        // ---- cleanup ----
         return () => {
             svg.on(".zoom", null);
         };
