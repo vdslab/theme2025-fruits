@@ -193,29 +193,23 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                             // ノードの大きさ
                             const r =
                                 emphasis === "high"
-                                    ? 14
+                                    ? 16
                                     : emphasis === "medium"
                                         ? 13
                                         : 12;
+
+                            const opacityClass =
+                                emphasis === "high" ? "opacity-100" :
+                                    emphasis === "medium" ? "opacity-80" :
+                                        "opacity-40";
 
                             return (
                                 <g
                                     key={n.id}
                                     onMouseEnter={() => setHoveredNodeId(n.id)}
                                     onMouseLeave={() => setHoveredNodeId(null)}
+                                    className={getContNodeClass(n.performanceId)}
                                 >
-                                    {/* 外枠を追加（選択中） */}
-                                    {isSelected && (
-                                        <circle
-                                            cx={n.x}
-                                            cy={n.y}
-                                            r={r + 2}
-                                            fill="none"
-                                            stroke="rgba(59, 130, 246)"
-                                            strokeWidth={4}
-                                        />
-                                    )}
-
                                     {/* 下地 */}
                                     <circle cx={n.x} cy={n.y} r={r} fill="white" />
 
@@ -224,7 +218,8 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                                         cx={n.x}
                                         cy={n.y}
                                         r={r}
-                                        className={`cursor-pointer transition-all ${getContNodeClass(n.performanceId, emphasis)}`}
+                                        fill="currentColor"
+                                        className={`cursor-pointer transition-all} ${opacityClass}`}
                                         onClick={() => onSelectContId(n.id)}
                                     />
                                 </g>
