@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { CONT_ID_TO_COLOR } from "../../lib/getContNodeClass";
 
-export default function Legend({ performanceMetaData }) {
+export default function Legend({ performanceMetaData, highlightedPerformanceId, onClickPerformance, }) {
     const performanceNameById = useMemo(() => {
         const m = new Map();
         for (const p of performanceMetaData ?? []) {
@@ -22,10 +22,20 @@ export default function Legend({ performanceMetaData }) {
                         performanceNameById.get(String(id)) ??
                         `Performance ${id}`;
 
+                    const isActive =
+                        highlightedPerformanceId == null ||
+                        String(highlightedPerformanceId) === String(id);
+
                     return (
                         <div
                             key={id}
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-2 cursor-pointer transition-opacity"
+                            style={{
+                                opacity: isActive ? 1 : 0.3,
+                            }}
+                            onClick={() => {
+                                onClickPerformance?.(id);
+                            }}
                         >
                             {/* 色丸 */}
                             <span

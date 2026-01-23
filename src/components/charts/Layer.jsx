@@ -12,7 +12,15 @@ function truncateLabel(text, maxLength = 5) {
         : text;
 }
 
-export default function GraphLayer({ nodes, links, selectedContId, onSelectContId }) {
+export default function GraphLayer({
+    nodes,
+    links,
+    selectedContId,
+    highlightedPerformanceId,
+    onSelectContId,
+    onClearHighlightedPerformance,
+    onHighlightPerformance,
+}) {
     const svgRef = useRef(null);
     const viewportRef = useRef(null);
     const zoomBehaviorRef = useRef(null);
@@ -137,7 +145,10 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                         width={200000}
                         height={200000}
                         fill="transparent"
-                        onClick={() => onSelectContId(null)}
+                        onClick={() => {
+                            onSelectContId(null);
+                            onClearHighlightedPerformance?.();
+                        }}
                     />
 
                     {/* ---- links ---- */}
@@ -201,21 +212,16 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                                 (selectedContId &&
                                     links.some(
                                         (l) =>
-                                            (l.source.id === selectedContId &&
-                                                l.target.id === n.id) ||
-                                            (l.target.id === selectedContId &&
-                                                l.source.id === n.id)
+                                            (l.source.id === selectedContId && l.target.id === n.id) ||
+                                            (l.target.id === selectedContId && l.source.id === n.id)
                                     )) ||
                                 (hoveredNodeId &&
                                     links.some(
                                         (l) =>
-                                            (l.source.id === hoveredNodeId &&
-                                                l.target.id === n.id) ||
-                                            (l.target.id === hoveredNodeId &&
-                                                l.source.id === n.id)
+                                            (l.source.id === hoveredNodeId && l.target.id === n.id) ||
+                                            (l.target.id === hoveredNodeId && l.source.id === n.id)
                                     ));
 
-                            // 強調の強さ
                             const hasSelection = selectedContId != null;
 
                             const emphasis = !hasSelection
@@ -228,18 +234,23 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                                         ? "medium"
                                         : "low";
 
-                            // ノードの大きさ
                             const r =
-                                emphasis === "high"
-                                    ? 16
-                                    : emphasis === "medium"
-                                        ? 13
-                                        : 12;
+                                emphasis === "high" ? 16 :
+                                    emphasis === "medium" ? 13 :
+                                        12;
+
+                            const shouldDeemphasizeByPerformance =
+                                highlightedPerformanceId != null &&
+                                n.performanceId !== highlightedPerformanceId;
 
                             const opacityClass =
-                                emphasis === "high" ? "opacity-100" :
-                                    emphasis === "medium" ? "opacity-80" :
-                                        "opacity-40";
+                                shouldDeemphasizeByPerformance
+                                    ? "opacity-40"
+                                    : emphasis === "high"
+                                        ? "opacity-100"
+                                        : emphasis === "medium"
+                                            ? "opacity-80"
+                                            : "opacity-40";
 
                             return (
                                 <g
@@ -257,8 +268,11 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                                         cy={n.y}
                                         r={r}
                                         fill="currentColor"
-                                        className={`cursor-pointer transition-all} ${opacityClass}`}
-                                        onClick={() => onSelectContId(n.id)}
+                                        className={`cursor-pointer transition-all ${opacityClass}`}
+                                        onClick={() => {
+                                            onSelectContId(n.id);
+                                            onHighlightPerformance?.(n.performanceId);
+                                        }}
                                     />
                                 </g>
                             );

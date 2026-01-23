@@ -3,6 +3,7 @@ import GraphLayer from "./charts/Layer";
 import SearchBox from "./Controls/SearchBox";
 import HelpButton from "./Controls/HelpButton";
 import HelpModal from "./HelpModal";
+import Legend from "./charts/Legend";
 
 import { buildGraph } from "../lib/buildGraph";
 import { useEffect, useMemo, useState, useRef } from "react";
@@ -13,6 +14,7 @@ export default function Main() {
 
     const [contMetaData, setContMetaData] = useState([]);
     const [selectedContId, setSelectedContId] = useState(null);
+    const [highlightedPerformanceId, setHighlightedPerformanceId] = useState(null);
 
     const [performanceMetaData, setPerformanceMetaData] = useState([]);
 
@@ -53,8 +55,8 @@ export default function Main() {
                         props: r["小道具"] ?? "",
                         relatedPerformanceId: String(
                             r["関連性の強い公演(id)"] ??
-                                r["関連性の強い公演ID"] ??
-                                ""
+                            r["関連性の強い公演ID"] ??
+                            ""
                         ),
                         relatedPerformanceName: r["関連性の高い公演名"] ?? "",
                     }))
@@ -202,7 +204,8 @@ export default function Main() {
     return (
         <div className="relative h-full">
             <div className="pointer-events-none absolute left-0 z-40">
-                <div className="pointer-events-auto  px-5 py-5">
+                <div className="pointer-events-auto px-5 py-5 w-72 space-y-4">
+                    {/* 検索 + ヘルプ */}
                     <div className="flex items-center gap-2">
                         <SearchBox
                             contMetaData={contMetaData}
@@ -210,13 +213,33 @@ export default function Main() {
                         />
                         <HelpButton onOpen={() => setIsHelpOpen(true)} />
                     </div>
+
+                    {/* 凡例 */}
+                    <Legend
+                        performanceMetaData={performanceMetaData}
+                        highlightedPerformanceId={highlightedPerformanceId}
+                        onClickPerformance={(id) => {
+                            setHighlightedPerformanceId((prev) =>
+                                String(prev) === String(id) ? null : String(id)
+                            );
+                        }}
+                    />
+
                 </div>
             </div>
+
             <GraphLayer
                 nodes={graph?.nodes ?? null}
                 links={graph?.links ?? null}
+                highlightedPerformanceId={highlightedPerformanceId}
                 selectedContId={selectedContId}
                 onSelectContId={selectCont}
+                onClearHighlightedPerformance={() => {
+                    setHighlightedPerformanceId(null);
+                }}
+                onHighlightPerformance={(performanceId) => {
+                    setHighlightedPerformanceId(String(performanceId));
+                }}
             />
             <DetailContent
                 cont={selectedCont}
