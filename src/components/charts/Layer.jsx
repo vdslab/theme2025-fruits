@@ -225,9 +225,11 @@ export default function GraphLayer({
                             const hasSelection = selectedContId != null;
 
                             const emphasis = !hasSelection
-                                ? (isHovered || isNeighbor)
+                                ? isHovered
                                     ? "high"
-                                    : "medium"
+                                    : isNeighbor
+                                        ? "medium"
+                                        : "medium"
                                 : isSelected
                                     ? "high"
                                     : (isHovered || isNeighbor)
@@ -241,7 +243,10 @@ export default function GraphLayer({
 
                             const shouldDeemphasizeByPerformance =
                                 highlightedPerformanceId != null &&
-                                n.performanceId !== highlightedPerformanceId;
+                                n.performanceId !== highlightedPerformanceId &&
+                                !isNeighbor &&
+                                !isSelected;
+
 
                             const opacityClass =
                                 shouldDeemphasizeByPerformance
@@ -249,7 +254,7 @@ export default function GraphLayer({
                                     : emphasis === "high"
                                         ? "opacity-100"
                                         : emphasis === "medium"
-                                            ? "opacity-80"
+                                            ? "opacity-100"
                                             : "opacity-40";
 
                             return (
