@@ -24,7 +24,7 @@ function toYouTubeEmbedUrl(url) {
     }
 }
 
-export default function DetailContent({ cont, performanceById, onClose }) {
+export default function DetailContent({ cont, performanceById, contsInSamePerformance, onSelectContId, onClose, }) {
     if (!cont) return null;
 
     const perf = cont.performanceId
@@ -164,6 +164,52 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                         </div>
                     </div>
                 )}
+
+                {/* この公演で演じられたコント */}
+                <div className="mt-3 card bg-base-100">
+                    <div className="card-body p-2">
+                        <div className="text-xs text-base-content/60 mb-1">
+                            この公演で演じられたコント
+                        </div>
+
+                        {contsInSamePerformance?.length ? (
+                            <ul className="space-y-1">
+                                {contsInSamePerformance.map((c, index) => {
+                                    const isCurrent = c.contId === cont.contId;
+                                    const order = index + 1;
+
+                                    return (
+                                        <li key={c.contId}>
+                                            <button
+                                                type="button"
+                                                disabled={isCurrent}
+                                                onClick={() => onSelectContId?.(c.contId)}
+                                                className={`w-full text-left flex gap-2 rounded px-1 py-0.5 text-sm break-words ${isCurrent
+                                                    ? "font-semibold text-primary cursor-default"
+                                                    : "hover:bg-base-200 text-base-content cursor-pointer"
+                                                    }`}
+                                            >
+                                                {/* 公演内番号 */}
+                                                <span className="tabular-nums text-base-content/60">
+                                                    {order}.
+                                                </span>
+
+                                                {/* コント名 */}
+                                                <span className="flex-1">
+                                                    {c.title}
+                                                </span>
+                                            </button>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        ) : (
+                            <div className="text-sm text-base-content/60">
+                                情報がありません
+                            </div>
+                        )}
+                    </div>
+                </div>
 
                 {/* 公演都市 */}
                 <div className="mt-3 card bg-base-100">
