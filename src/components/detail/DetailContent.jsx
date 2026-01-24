@@ -166,7 +166,7 @@ export default function DetailContent({ cont, performanceById, contsInSamePerfor
                 )}
 
                 {/* この公演で演じられたコント */}
-                <div className="card bg-base-100">
+                <div className="mt-1 card bg-base-100">
                     <div className="card-body p-1">
                         <div className="text-xs text-base-content/60 mb-1">
                             この公演で演じられたコント
