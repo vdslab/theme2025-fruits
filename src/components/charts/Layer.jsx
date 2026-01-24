@@ -221,19 +221,24 @@ export default function GraphLayer({
                                             (l.target.id === hoveredNodeId && l.source.id === n.id)
                                     ));
 
+                            const isSamePerformance =
+                                highlightedPerformanceId != null &&
+                                n.performanceId === highlightedPerformanceId;
+
                             const hasSelection = selectedContId != null;
 
                             const emphasis = !hasSelection
-                                ? isHovered
+                                ? (isHovered || isSamePerformance)
                                     ? "high"
                                     : isNeighbor
                                         ? "medium"
                                         : "medium"
-                                : isSelected
+                                : isSelected || isSamePerformance
                                     ? "high"
                                     : (isHovered || isNeighbor)
                                         ? "medium"
                                         : "low";
+
 
                             const r =
                                 emphasis === "high" ? 16 :
@@ -272,6 +277,8 @@ export default function GraphLayer({
                                         cy={n.y}
                                         r={r}
                                         fill="currentColor"
+                                        stroke={emphasis === "high" ? "#000" : "none"}
+                                        strokeWidth={emphasis === "high" ? 3 : 0}
                                         className={`cursor-pointer transition-all ${opacityClass}`}
                                         onClick={() => {
                                             onSelectContId(n.id);
