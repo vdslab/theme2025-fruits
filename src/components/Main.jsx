@@ -204,9 +204,9 @@ export default function Main() {
     return (
         <div className="relative h-full">
             <div className="pointer-events-none absolute left-0 z-40">
-                <div className="pointer-events-auto px-5 py-5 w-72 space-y-4">
+                <div className="px-5 py-5 w-72 space-y-4 pointer-events-none">
                     {/* 検索 + ヘルプ */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 pointer-events-auto">
                         <SearchBox
                             contMetaData={contMetaData}
                             onSelectContId={selectCont}
@@ -215,16 +215,17 @@ export default function Main() {
                     </div>
 
                     {/* 凡例 */}
-                    <Legend
-                        performanceMetaData={performanceMetaData}
-                        highlightedPerformanceId={highlightedPerformanceId}
-                        onClickPerformance={(id) => {
-                            setHighlightedPerformanceId((prev) =>
-                                String(prev) === String(id) ? null : String(id)
-                            );
-                        }}
-                    />
-
+                    <div className="pointer-events-none">
+                        <Legend
+                            performanceMetaData={performanceMetaData}
+                            highlightedPerformanceId={highlightedPerformanceId}
+                            onClickPerformance={(id) => {
+                                setHighlightedPerformanceId((prev) =>
+                                    String(prev) === String(id) ? null : String(id)
+                                );
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
 

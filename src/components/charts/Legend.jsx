@@ -11,7 +11,7 @@ export default function Legend({ performanceMetaData, highlightedPerformanceId, 
     }, [performanceMetaData]);
 
     return (
-        <div className="mt-4 text-sm space-y-2">
+        <div className="mt-4 text-sm space-y-2 pointer-events-none">
             <div className="font-semibold text-gray-700">
                 公演
             </div>
@@ -27,30 +27,27 @@ export default function Legend({ performanceMetaData, highlightedPerformanceId, 
                         String(highlightedPerformanceId) === String(id);
 
                     return (
-                        <div
-                            key={id}
-                            className="flex items-center gap-2 cursor-pointer transition-opacity"
-                            style={{
-                                opacity: isActive ? 1 : 0.3,
-                            }}
-                            onClick={() => {
-                                onClickPerformance?.(id);
-                            }}
-                        >
-                            {/* 色丸 */}
-                            <span
-                                className="inline-block w-3 h-3 rounded-full shrink-0"
-                                style={{ backgroundColor: color }}
-                            />
-
-                            {/* 公演名 */}
-                            <span className="text-gray-700 leading-tight">
-                                {name}
-                            </span>
+                        <div key={id}>
+                            <div
+                                className="inline-flex items-center gap-2
+                                    cursor-pointer transition-opacity
+                                    pointer-events-auto"
+                                style={{ opacity: isActive ? 1 : 0.3 }}
+                                onClick={() => onClickPerformance?.(id)}
+                            >
+                                <span
+                                    className="inline-block w-3 h-3 rounded-full shrink-0"
+                                    style={{ backgroundColor: color }}
+                                />
+                                <span className="text-gray-700 leading-tight">
+                                    {name}
+                                </span>
+                            </div>
                         </div>
                     );
                 })}
             </div>
         </div>
+
     );
 }
