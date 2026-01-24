@@ -34,14 +34,18 @@ export default function SearchBox({ contMetaData, onSelectContId }) {
 
     // 外側クリックで閉じる
     useEffect(() => {
-        const onDocMouseDown = (e) => {
+        const onDocPointerDown = (e) => {
+            console.log("doc pointerdown", e.target);
             if (!rootRef.current) return;
             if (!rootRef.current.contains(e.target)) {
                 setOpen(false);
+                setQuery("");
             }
         };
-        document.addEventListener("mousedown", onDocMouseDown);
-        return () => document.removeEventListener("mousedown", onDocMouseDown);
+
+        document.addEventListener("pointerdown", onDocPointerDown, true);
+        return () =>
+            document.removeEventListener("pointerdown", onDocPointerDown, true);
     }, []);
 
     const commitSelect = (c) => {

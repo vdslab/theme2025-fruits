@@ -229,16 +229,20 @@ export default function Main() {
                     </div>
 
                     {/* 凡例 */}
-                    <div className="pointer-events-none">
-                        <Legend
-                            performanceMetaData={performanceMetaData}
-                            highlightedPerformanceId={highlightedPerformanceId}
-                            onClickPerformance={(id) => {
-                                setHighlightedPerformanceId((prev) =>
-                                    String(prev) === String(id) ? null : String(id)
-                                );
-                            }}
-                        />
+                    <div className="absolute left-0 top-10 z-40 pointer-events-none">
+                        <div className="px-5 py-5 w-72">
+                            <div className="pointer-events-none">
+                                <Legend
+                                    performanceMetaData={performanceMetaData}
+                                    highlightedPerformanceId={highlightedPerformanceId}
+                                    onClickPerformance={(id) => {
+                                        setHighlightedPerformanceId((prev) =>
+                                            String(prev) === String(id) ? null : String(id)
+                                        );
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
