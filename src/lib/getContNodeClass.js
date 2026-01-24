@@ -1,3 +1,21 @@
+export const CONT_ID_TO_COLOR = {
+    5: "#1F77B4",
+    6: "#FF7F0E",
+    7: "#2CA02C",
+    8: "#17BECF",
+    9: "#D62728",
+
+    10: "#9467BD",
+    11: "#8C564B",
+    12: "#E377C2",
+    13: "#7F7F7F",
+
+    14: "#BCBD22",
+    15: "#AEC7E8",
+    16: "#FF9896",
+    17: "#C49C94",
+};
+
 export function getContNodeClass(performanceId) {
     const CONT_ID_TO_COLOR = {
         5: "text-[#1F77B4]", // blue
@@ -20,3 +38,4 @@ export function getContNodeClass(performanceId) {
     if (!base) return "fill-gray-400";
     return `${base}`;
 }
+

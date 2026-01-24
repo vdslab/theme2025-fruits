@@ -12,7 +12,14 @@ function truncateLabel(text, maxLength = 5) {
         : text;
 }
 
-export default function GraphLayer({ nodes, links, selectedContId, onSelectContId }) {
+export default function GraphLayer({
+    nodes,
+    links,
+    selectedContId,
+    highlightedPerformanceId,
+    onSelectContId,
+    onClearHighlightedPerformance,
+}) {
     const svgRef = useRef(null);
     const viewportRef = useRef(null);
     const zoomBehaviorRef = useRef(null);
@@ -137,7 +144,10 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                         width={200000}
                         height={200000}
                         fill="transparent"
-                        onClick={() => onSelectContId(null)}
+                        onClick={() => {
+                            onSelectContId(null);
+                            onClearHighlightedPerformance?.();
+                        }}
                     />
 
                     {/* ---- links ---- */}
@@ -201,45 +211,55 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                                 (selectedContId &&
                                     links.some(
                                         (l) =>
-                                            (l.source.id === selectedContId &&
-                                                l.target.id === n.id) ||
-                                            (l.target.id === selectedContId &&
-                                                l.source.id === n.id)
+                                            (l.source.id === selectedContId && l.target.id === n.id) ||
+                                            (l.target.id === selectedContId && l.source.id === n.id)
                                     )) ||
                                 (hoveredNodeId &&
                                     links.some(
                                         (l) =>
-                                            (l.source.id === hoveredNodeId &&
-                                                l.target.id === n.id) ||
-                                            (l.target.id === hoveredNodeId &&
-                                                l.source.id === n.id)
+                                            (l.source.id === hoveredNodeId && l.target.id === n.id) ||
+                                            (l.target.id === hoveredNodeId && l.source.id === n.id)
                                     ));
 
-                            // 強調の強さ
+                            const isSamePerformance =
+                                highlightedPerformanceId != null &&
+                                n.performanceId === highlightedPerformanceId;
+
                             const hasSelection = selectedContId != null;
 
                             const emphasis = !hasSelection
-                                ? (isHovered || isNeighbor)
+                                ? (isHovered || isSamePerformance)
                                     ? "high"
-                                    : "medium"
-                                : isSelected
+                                    : isNeighbor
+                                        ? "medium"
+                                        : "medium"
+                                : isSelected || isSamePerformance
                                     ? "high"
                                     : (isHovered || isNeighbor)
                                         ? "medium"
                                         : "low";
 
-                            // ノードの大きさ
+
                             const r =
-                                emphasis === "high"
-                                    ? 16
-                                    : emphasis === "medium"
-                                        ? 13
-                                        : 12;
+                                emphasis === "high" ? 16 :
+                                    emphasis === "medium" ? 13 :
+                                        12;
+
+                            const shouldDeemphasizeByPerformance =
+                                highlightedPerformanceId != null &&
+                                n.performanceId !== highlightedPerformanceId &&
+                                !isNeighbor &&
+                                !isSelected;
+
 
                             const opacityClass =
-                                emphasis === "high" ? "opacity-100" :
-                                    emphasis === "medium" ? "opacity-80" :
-                                        "opacity-40";
+                                shouldDeemphasizeByPerformance
+                                    ? "opacity-40"
+                                    : emphasis === "high"
+                                        ? "opacity-100"
+                                        : emphasis === "medium"
+                                            ? "opacity-100"
+                                            : "opacity-40";
 
                             return (
                                 <g
@@ -257,8 +277,13 @@ export default function GraphLayer({ nodes, links, selectedContId, onSelectContI
                                         cy={n.y}
                                         r={r}
                                         fill="currentColor"
-                                        className={`cursor-pointer transition-all} ${opacityClass}`}
-                                        onClick={() => onSelectContId(n.id)}
+                                        stroke={emphasis === "high" ? "#000" : "none"}
+                                        strokeWidth={emphasis === "high" ? 3 : 0}
+                                        className={`cursor-pointer transition-all ${opacityClass}`}
+                                        onClick={() => {
+                                            onSelectContId(n.id);
+                                            onClearHighlightedPerformance?.();
+                                        }}
                                     />
                                 </g>
                             );
