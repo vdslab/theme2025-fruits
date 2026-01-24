@@ -43,10 +43,6 @@ export default function DetailContent({ cont, performanceById, onClose }) {
             {/* header */}
             <div className="p-4 border-base-200 flex items-start gap-3">
                 <div className="flex-1 min-w-0">
-                    <h1 className="text-sm text-base-content/60 break-words">
-                        {performanceName || "（公演名不明）"}
-                    </h1>
-
                     <h2 className="mt-1 text-base font-semibold break-words">
                         {cont.title}
                     </h2>
@@ -133,6 +129,18 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                 </div>
 
                 <div className="divider my-4">公演情報</div>
+
+                {/* 公演名 */}
+                <div className="card bg-base-100">
+                    <div className="card-body p-2">
+                        <div className="text-xs text-base-content/60">
+                            公演名
+                        </div>
+                        <div className="text-sm break-words">
+                            {performanceName || "情報がありません"}
+                        </div>
+                    </div>
+                </div>
 
                 {/* 公演年 */}
                 {performanceYear ? (
