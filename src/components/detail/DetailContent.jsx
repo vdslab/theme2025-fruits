@@ -104,11 +104,11 @@ export default function DetailContent({ cont, performanceById, contsInSamePerfor
                     </div>
                 ) : null} */}
 
-                <div className="divider my-4">コント情報</div>
+                <div className="divider my-2">コント情報</div>
 
                 {cont.duration ? (
                     <div className="card bg-base-100">
-                        <div className="card-body p-2">
+                        <div className="card-body p-1">
                             <div className="text-xs text-base-content/60">
                                 時間
                             </div>
@@ -118,7 +118,7 @@ export default function DetailContent({ cont, performanceById, contsInSamePerfor
                 ) : null}
 
                 <div className="mt-3 card bg-base-100">
-                    <div className="card-body p-2">
+                    <div className="card-body p-1">
                         <div className="text-xs text-base-content/60">
                             小道具
                         </div>
@@ -128,11 +128,11 @@ export default function DetailContent({ cont, performanceById, contsInSamePerfor
                     </div>
                 </div>
 
-                <div className="divider my-4">公演情報</div>
+                <div className="divider my-2">公演情報</div>
 
                 {/* 公演名 */}
                 <div className="card bg-base-100">
-                    <div className="card-body p-2">
+                    <div className="card-body p-1">
                         <div className="text-xs text-base-content/60">
                             公演名
                         </div>
@@ -145,7 +145,7 @@ export default function DetailContent({ cont, performanceById, contsInSamePerfor
                 {/* 公演年 */}
                 {performanceYear ? (
                     <div className="card bg-base-100">
-                        <div className="card-body p-2">
+                        <div className="card-body p-1">
                             <div className="text-xs text-base-content/60">
                                 公演年
                             </div>
@@ -154,7 +154,7 @@ export default function DetailContent({ cont, performanceById, contsInSamePerfor
                     </div>
                 ) : (
                     <div className="card bg-base-100">
-                        <div className="card-body p-2">
+                        <div className="card-body p-1">
                             <div className="text-xs text-base-content/60">
                                 公演年
                             </div>
@@ -167,7 +167,7 @@ export default function DetailContent({ cont, performanceById, contsInSamePerfor
 
                 {/* この公演で演じられたコント */}
                 <div className="mt-3 card bg-base-100">
-                    <div className="card-body p-2">
+                    <div className="card-body p-1">
                         <div className="text-xs text-base-content/60 mb-1">
                             この公演で演じられたコント
                         </div>
@@ -213,7 +213,7 @@ export default function DetailContent({ cont, performanceById, contsInSamePerfor
 
                 {/* 公演都市 */}
                 <div className="mt-3 card bg-base-100">
-                    <div className="card-body p-2">
+                    <div className="card-body p-1">
                         <div className="text-xs text-base-content/60">
                             公演都市
                         </div>
@@ -225,7 +225,7 @@ export default function DetailContent({ cont, performanceById, contsInSamePerfor
 
                 {/* 公演DVD（URL） */}
                 <div className="mt-3 card bg-base-100 ">
-                    <div className="card-body p-3">
+                    <div className="card-body p-1">
                         <div className="text-xs text-base-content/60">
                             公演DVD
                         </div>
