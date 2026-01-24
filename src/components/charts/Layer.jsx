@@ -222,21 +222,17 @@ export default function GraphLayer({
                                             (l.target.id === hoveredNodeId && l.source.id === n.id)
                                     ));
 
-                            const isSamePerformance =
-                                highlightedPerformanceId != null &&
-                                n.performanceId === highlightedPerformanceId;
-
                             const hasSelection = selectedContId != null;
 
                             const emphasis = !hasSelection
                                 ? isHovered
                                     ? "high"
-                                    : isNeighbor || isSamePerformance
+                                    : isNeighbor
                                         ? "medium"
                                         : "medium"
                                 : isSelected
                                     ? "high"
-                                    : (isHovered || isNeighbor || isSamePerformance)
+                                    : (isHovered || isNeighbor)
                                         ? "medium"
                                         : "low";
 
@@ -247,11 +243,11 @@ export default function GraphLayer({
 
                             const shouldDeemphasizeByPerformance =
                                 highlightedPerformanceId != null &&
-                                !isSamePerformance &&
+                                n.performanceId !== highlightedPerformanceId &&
                                 !isNeighbor &&
                                 !isSelected;
 
-                            {/* 下地 */ }
+
                             const opacityClass =
                                 shouldDeemphasizeByPerformance
                                     ? "opacity-40"
@@ -312,19 +308,15 @@ export default function GraphLayer({
                                                 l.source.id === n.id)
                                     ));
 
-                            const isSamePerformance =
-                                highlightedPerformanceId != null &&
-                                n.performanceId === highlightedPerformanceId;
-
                             const hasSelection = selectedContId != null;
 
                             const emphasis = !hasSelection
-                                ? (isHovered || isNeighbor || isSamePerformance)
+                                ? (isHovered || isNeighbor)
                                     ? "high"
                                     : "medium"
                                 : isSelected
                                     ? "high"
-                                    : (isHovered || isNeighbor || isSamePerformance)
+                                    : (isHovered || isNeighbor)
                                         ? "medium"
                                         : "low";
 
@@ -337,7 +329,7 @@ export default function GraphLayer({
 
                             const displayLabel =
                                 !hasSelection
-                                    ? (isHovered || isNeighbor || isSamePerformance
+                                    ? (isHovered || isNeighbor
                                         ? n.label
                                         : truncateLabel(n.label, 6))
                                     : emphasis === "low"
