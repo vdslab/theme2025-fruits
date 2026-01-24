@@ -166,7 +166,7 @@ export default function DetailContent({ cont, performanceById, contsInSamePerfor
                 )}
 
                 {/* この公演で演じられたコント */}
-                <div className="mt-3 card bg-base-100">
+                <div className="card bg-base-100">
                     <div className="card-body p-1">
                         <div className="text-xs text-base-content/60 mb-1">
                             この公演で演じられたコント
@@ -232,7 +232,7 @@ export default function DetailContent({ cont, performanceById, contsInSamePerfor
 
                         {performanceUrl ? (
                             <a
-                                className="link link-primary break-all"
+                                className="link link-primary break-all cursor-pointer"
                                 href={performanceUrl}
                                 target="_blank"
                                 rel="noreferrer"
