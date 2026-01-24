@@ -19,7 +19,6 @@ export default function GraphLayer({
     highlightedPerformanceId,
     onSelectContId,
     onClearHighlightedPerformance,
-    onHighlightPerformance,
 }) {
     const svgRef = useRef(null);
     const viewportRef = useRef(null);
@@ -276,7 +275,7 @@ export default function GraphLayer({
                                         className={`cursor-pointer transition-all ${opacityClass}`}
                                         onClick={() => {
                                             onSelectContId(n.id);
-                                            onHighlightPerformance?.(n.performanceId);
+                                            onClearHighlightedPerformance?.();
                                         }}
                                     />
                                 </g>
