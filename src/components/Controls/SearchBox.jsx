@@ -107,6 +107,7 @@ export default function SearchBox({ contMetaData, onSelectContId }) {
                                         className="
                                             w-full px-4 py-3 text-left
                                             hover:bg-gray-50
+                                            cursor-pointer
                                         "
                                     >
                                         <div className="text-sm text-gray-900">
