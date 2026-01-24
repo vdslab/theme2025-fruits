@@ -245,7 +245,10 @@ export default function Main() {
             <DetailContent
                 cont={selectedCont}
                 performanceById={performanceById}
-                onClose={() => setSelectedContId(null)}
+                onClose={() => {
+                    setSelectedContId(null);
+                    setHighlightedPerformanceId(null);
+                }}
             />
             <HelpModal
                 isOpen={isHelpOpen}
