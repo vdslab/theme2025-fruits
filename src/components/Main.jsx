@@ -201,6 +201,20 @@ export default function Main() {
         buildGraph({ width, height }).then(setGraph);
     }, []);
 
+    // 同一公演のコント一覧（上演順）
+    const contsInSamePerformance = useMemo(() => {
+        if (!selectedCont?.performanceId) return [];
+
+        return contMetaData
+            .filter(
+                (c) => String(c.performanceId) === String(selectedCont.performanceId)
+            )
+            .sort((a, b) => {
+                // contId は文字列なので数値比較
+                return Number(a.contId) - Number(b.contId);
+            });
+    }, [contMetaData, selectedCont]);
+
     return (
         <div className="relative h-full">
             <div className="pointer-events-none absolute left-0 z-40">
@@ -215,16 +229,20 @@ export default function Main() {
                     </div>
 
                     {/* 凡例 */}
-                    <div className="pointer-events-none">
-                        <Legend
-                            performanceMetaData={performanceMetaData}
-                            highlightedPerformanceId={highlightedPerformanceId}
-                            onClickPerformance={(id) => {
-                                setHighlightedPerformanceId((prev) =>
-                                    String(prev) === String(id) ? null : String(id)
-                                );
-                            }}
-                        />
+                    <div className="absolute left-0 top-10 z-40 pointer-events-none">
+                        <div className="px-5 py-5 w-72">
+                            <div className="pointer-events-none">
+                                <Legend
+                                    performanceMetaData={performanceMetaData}
+                                    highlightedPerformanceId={highlightedPerformanceId}
+                                    onClickPerformance={(id) => {
+                                        setHighlightedPerformanceId((prev) =>
+                                            String(prev) === String(id) ? null : String(id)
+                                        );
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -245,6 +263,8 @@ export default function Main() {
             <DetailContent
                 cont={selectedCont}
                 performanceById={performanceById}
+                contsInSamePerformance={contsInSamePerformance}
+                onSelectContId={selectCont}
                 onClose={() => {
                     setSelectedContId(null);
                     setHighlightedPerformanceId(null);
