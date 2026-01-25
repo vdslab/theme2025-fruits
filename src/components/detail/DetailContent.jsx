@@ -49,6 +49,9 @@ export default function DetailContent({
             {/* header */}
             <div className="p-4 border-base-200 flex items-start gap-3">
                 <div className="flex-1 min-w-0">
+                    <h1 className="text-sm text-base-content/60 break-words">
+                        {performanceName || "（公演名不明）"}
+                    </h1>
                     <h2 className="mt-1 text-base font-semibold break-words">
                         {cont.title}
                     </h2>
@@ -134,19 +137,54 @@ export default function DetailContent({
                     </div>
                 </div>
 
-                <div className="divider my-2">公演情報</div>
+                <div className="divider my-2">同じ公演のコント</div>
 
-                {/* 公演名 */}
-                <div className="card bg-base-100">
+                {/* この公演で演じられたコント */}
+                <div className="mt-1 card bg-base-100">
                     <div className="card-body p-1">
-                        <div className="text-xs text-base-content/60">
-                            公演名
-                        </div>
-                        <div className="text-sm break-words">
-                            {performanceName || "情報がありません"}
-                        </div>
+                        {contsInSamePerformance?.length ? (
+                            <ul className="space-y-1">
+                                {contsInSamePerformance.map((c, index) => {
+                                    const isCurrent = c.contId === cont.contId;
+                                    const order = index + 1;
+
+                                    return (
+                                        <li key={c.contId}>
+                                            <button
+                                                type="button"
+                                                disabled={isCurrent}
+                                                onClick={() =>
+                                                    onSelectContId?.(c.contId)
+                                                }
+                                                className={`w-full text-left flex gap-2 rounded px-1 py-0.5 text-sm break-words ${
+                                                    isCurrent
+                                                        ? "font-semibold text-primary cursor-default"
+                                                        : "hover:bg-base-200 text-base-content cursor-pointer"
+                                                }`}
+                                            >
+                                                {/* 公演内番号 */}
+                                                <span className="tabular-nums text-base-content/60">
+                                                    {order}.
+                                                </span>
+
+                                                {/* コント名 */}
+                                                <span className="flex-1">
+                                                    {c.title}
+                                                </span>
+                                            </button>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        ) : (
+                            <div className="text-sm text-base-content/60">
+                                情報がありません
+                            </div>
+                        )}
                     </div>
                 </div>
+
+                <div className="divider my-2">公演情報</div>
 
                 {/* 公演年 */}
                 {performanceYear ? (
@@ -203,58 +241,6 @@ export default function DetailContent({
                                 情報がありません
                             </div>
                         )}
-
-                        <div className="divider my-2">この公演のコント</div>
-
-                        {/* この公演で演じられたコント */}
-                        <div className="mt-1 card bg-base-100">
-                            <div className="card-body p-1">
-                                {contsInSamePerformance?.length ? (
-                                    <ul className="space-y-1">
-                                        {contsInSamePerformance.map(
-                                            (c, index) => {
-                                                const isCurrent =
-                                                    c.contId === cont.contId;
-                                                const order = index + 1;
-
-                                                return (
-                                                    <li key={c.contId}>
-                                                        <button
-                                                            type="button"
-                                                            disabled={isCurrent}
-                                                            onClick={() =>
-                                                                onSelectContId?.(
-                                                                    c.contId
-                                                                )
-                                                            }
-                                                            className={`w-full text-left flex gap-2 rounded px-1 py-0.5 text-sm break-words ${
-                                                                isCurrent
-                                                                    ? "font-semibold text-primary cursor-default"
-                                                                    : "hover:bg-base-200 text-base-content cursor-pointer"
-                                                            }`}
-                                                        >
-                                                            {/* 公演内番号 */}
-                                                            <span className="tabular-nums text-base-content/60">
-                                                                {order}.
-                                                            </span>
-
-                                                            {/* コント名 */}
-                                                            <span className="flex-1">
-                                                                {c.title}
-                                                            </span>
-                                                        </button>
-                                                    </li>
-                                                );
-                                            }
-                                        )}
-                                    </ul>
-                                ) : (
-                                    <div className="text-sm text-base-content/60">
-                                        情報がありません
-                                    </div>
-                                )}
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
