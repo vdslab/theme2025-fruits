@@ -1,4 +1,4 @@
-import React from "react";
+import { CONT_ID_TO_COLOR } from "../../lib/getContNodeClass";
 
 function toYouTubeEmbedUrl(url) {
     if (!url) return null;
@@ -44,14 +44,27 @@ export default function DetailContent({
     const performanceCityRaw = perf?.performanceCity ?? "";
     const performanceUrl = perf?.url ?? "";
 
+    const perfId =
+        cont.performanceId != null ? Number(cont.performanceId) : null;
+    const perfColor = perfId != null ? CONT_ID_TO_COLOR[perfId] : null;
+
     return (
         <aside className="absolute top-0 right-0 z-50 h-screen w-[360px] bg-base-100 shadow-2xl flex flex-col">
             {/* header */}
             <div className="p-4 border-base-200 flex items-start gap-3">
                 <div className="flex-1 min-w-0">
-                    <h1 className="text-sm text-base-content/60 break-words">
-                        {performanceName || "（公演名不明）"}
-                    </h1>
+                    {/* ★ 変更：公演名行に色ドットを追加 */}
+                    <div className="flex items-center gap-2 min-w-0">
+                        <span
+                            className="inline-block h-2 w-2 rounded-full shrink-0"
+                            style={{ backgroundColor: perfColor ?? "#9CA3AF" }} // fallback: gray-400
+                            aria-hidden="true"
+                        />
+                        <h1 className="text-sm text-base-content/60 break-words">
+                            {performanceName || "（公演名不明）"}
+                        </h1>
+                    </div>
+
                     <h2 className="mt-1 text-base font-semibold break-words">
                         {cont.title}
                     </h2>
