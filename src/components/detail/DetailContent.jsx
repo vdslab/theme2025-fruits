@@ -158,7 +158,7 @@ export default function DetailContent({
                                                 }
                                                 className={`w-full text-left flex gap-2 rounded px-1 py-0.5 text-sm break-words ${
                                                     isCurrent
-                                                        ? "font-semibold text-primary cursor-default"
+                                                        ? "text-base-content/40 cursor-default"
                                                         : "hover:bg-base-200 text-base-content cursor-pointer"
                                                 }`}
                                             >
