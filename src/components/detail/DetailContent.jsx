@@ -1,4 +1,4 @@
-import React from "react";
+import { CONT_ID_TO_COLOR } from "../../lib/getContNodeClass";
 
 function toYouTubeEmbedUrl(url) {
     if (!url) return null;
@@ -24,7 +24,13 @@ function toYouTubeEmbedUrl(url) {
     }
 }
 
-export default function DetailContent({ cont, performanceById, onClose }) {
+export default function DetailContent({
+    cont,
+    performanceById,
+    contsInSamePerformance,
+    onSelectContId,
+    onClose,
+}) {
     if (!cont) return null;
 
     const perf = cont.performanceId
@@ -38,14 +44,26 @@ export default function DetailContent({ cont, performanceById, onClose }) {
     const performanceCityRaw = perf?.performanceCity ?? "";
     const performanceUrl = perf?.url ?? "";
 
+    const perfId =
+        cont.performanceId != null ? Number(cont.performanceId) : null;
+    const perfColor = perfId != null ? CONT_ID_TO_COLOR[perfId] : null;
+
     return (
         <aside className="absolute top-0 right-0 z-50 h-screen w-[360px] bg-base-100 shadow-2xl flex flex-col">
             {/* header */}
             <div className="p-4 border-base-200 flex items-start gap-3">
                 <div className="flex-1 min-w-0">
-                    <h1 className="text-sm text-base-content/60 break-words">
-                        {performanceName || "（公演名不明）"}
-                    </h1>
+                    {/* ★ 変更：公演名行に色ドットを追加 */}
+                    <div className="flex items-center gap-2 min-w-0">
+                        <span
+                            className="inline-block h-2 w-2 rounded-full shrink-0"
+                            style={{ backgroundColor: perfColor ?? "#9CA3AF" }} // fallback: gray-400
+                            aria-hidden="true"
+                        />
+                        <h1 className="text-sm text-base-content/60 break-words">
+                            {performanceName || "（公演名不明）"}
+                        </h1>
+                    </div>
 
                     <h2 className="mt-1 text-base font-semibold break-words">
                         {cont.title}
@@ -108,11 +126,11 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                     </div>
                 ) : null} */}
 
-                <div className="divider my-4">コント情報</div>
+                <div className="divider my-2">コント情報</div>
 
                 {cont.duration ? (
                     <div className="card bg-base-100">
-                        <div className="card-body p-2">
+                        <div className="card-body p-1">
                             <div className="text-xs text-base-content/60">
                                 時間
                             </div>
@@ -122,7 +140,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                 ) : null}
 
                 <div className="mt-3 card bg-base-100">
-                    <div className="card-body p-2">
+                    <div className="card-body p-1">
                         <div className="text-xs text-base-content/60">
                             小道具
                         </div>
@@ -132,12 +150,59 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                     </div>
                 </div>
 
-                <div className="divider my-4">公演情報</div>
+                <div className="divider my-2">同じ公演のコント</div>
+
+                {/* この公演で演じられたコント */}
+                <div className="mt-1 card bg-base-100">
+                    <div className="card-body p-1">
+                        {contsInSamePerformance?.length ? (
+                            <ul className="space-y-1">
+                                {contsInSamePerformance.map((c, index) => {
+                                    const isCurrent = c.contId === cont.contId;
+                                    const order = index + 1;
+
+                                    return (
+                                        <li key={c.contId}>
+                                            <button
+                                                type="button"
+                                                disabled={isCurrent}
+                                                onClick={() =>
+                                                    onSelectContId?.(c.contId)
+                                                }
+                                                className={`w-full text-left flex gap-2 rounded px-1 py-0.5 text-sm break-words ${
+                                                    isCurrent
+                                                        ? "text-base-content/40 cursor-default"
+                                                        : "hover:bg-base-200 text-base-content cursor-pointer"
+                                                }`}
+                                            >
+                                                {/* 公演内番号 */}
+                                                <span className="tabular-nums text-base-content/60">
+                                                    {order}.
+                                                </span>
+
+                                                {/* コント名 */}
+                                                <span className="flex-1">
+                                                    {c.title}
+                                                </span>
+                                            </button>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        ) : (
+                            <div className="text-sm text-base-content/60">
+                                情報がありません
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="divider my-2">公演情報</div>
 
                 {/* 公演年 */}
                 {performanceYear ? (
                     <div className="card bg-base-100">
-                        <div className="card-body p-2">
+                        <div className="card-body p-1">
                             <div className="text-xs text-base-content/60">
                                 公演年
                             </div>
@@ -146,7 +211,7 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                     </div>
                 ) : (
                     <div className="card bg-base-100">
-                        <div className="card-body p-2">
+                        <div className="card-body p-1">
                             <div className="text-xs text-base-content/60">
                                 公演年
                             </div>
@@ -156,10 +221,9 @@ export default function DetailContent({ cont, performanceById, onClose }) {
                         </div>
                     </div>
                 )}
-
                 {/* 公演都市 */}
                 <div className="mt-3 card bg-base-100">
-                    <div className="card-body p-2">
+                    <div className="card-body p-1">
                         <div className="text-xs text-base-content/60">
                             公演都市
                         </div>
@@ -171,14 +235,14 @@ export default function DetailContent({ cont, performanceById, onClose }) {
 
                 {/* 公演DVD（URL） */}
                 <div className="mt-3 card bg-base-100 ">
-                    <div className="card-body p-3">
+                    <div className="card-body p-1">
                         <div className="text-xs text-base-content/60">
                             公演DVD
                         </div>
 
                         {performanceUrl ? (
                             <a
-                                className="link link-primary break-all"
+                                className="link link-primary break-all cursor-pointer"
                                 href={performanceUrl}
                                 target="_blank"
                                 rel="noreferrer"

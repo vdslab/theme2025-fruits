@@ -3,6 +3,7 @@ import GraphLayer from "./charts/Layer";
 import SearchBox from "./Controls/SearchBox";
 import HelpButton from "./Controls/HelpButton";
 import HelpModal from "./HelpModal";
+import Legend from "./charts/Legend";
 
 import { buildGraph } from "../lib/buildGraph";
 import { useEffect, useMemo, useState, useRef } from "react";
@@ -13,6 +14,7 @@ export default function Main() {
 
     const [contMetaData, setContMetaData] = useState([]);
     const [selectedContId, setSelectedContId] = useState(null);
+    const [highlightedPerformanceId, setHighlightedPerformanceId] = useState(null);
 
     const [performanceMetaData, setPerformanceMetaData] = useState([]);
 
@@ -53,8 +55,8 @@ export default function Main() {
                         props: r["小道具"] ?? "",
                         relatedPerformanceId: String(
                             r["関連性の強い公演(id)"] ??
-                                r["関連性の強い公演ID"] ??
-                                ""
+                            r["関連性の強い公演ID"] ??
+                            ""
                         ),
                         relatedPerformanceName: r["関連性の高い公演名"] ?? "",
                     }))
@@ -199,29 +201,74 @@ export default function Main() {
         buildGraph({ width, height }).then(setGraph);
     }, []);
 
+    // 同一公演のコント一覧（上演順）
+    const contsInSamePerformance = useMemo(() => {
+        if (!selectedCont?.performanceId) return [];
+
+        return contMetaData
+            .filter(
+                (c) => String(c.performanceId) === String(selectedCont.performanceId)
+            )
+            .sort((a, b) => {
+                // contId は文字列なので数値比較
+                return Number(a.contId) - Number(b.contId);
+            });
+    }, [contMetaData, selectedCont]);
+
     return (
         <div className="relative h-full">
             <div className="pointer-events-none absolute left-0 z-40">
-                <div className="pointer-events-auto  px-5 py-5">
-                    <div className="flex items-center gap-2">
+                <div className="px-5 py-5 w-72 space-y-4 pointer-events-none">
+                    {/* 検索 + ヘルプ */}
+                    <div className="flex items-center gap-2 pointer-events-auto">
                         <SearchBox
                             contMetaData={contMetaData}
                             onSelectContId={selectCont}
                         />
                         <HelpButton onOpen={() => setIsHelpOpen(true)} />
                     </div>
+
+                    {/* 凡例 */}
+                    <div className="absolute left-0 top-10 z-40 pointer-events-none">
+                        <div className="px-5 py-5 w-72">
+                            <div className="pointer-events-none">
+                                <Legend
+                                    performanceMetaData={performanceMetaData}
+                                    highlightedPerformanceId={highlightedPerformanceId}
+                                    onClickPerformance={(id) => {
+                                        setHighlightedPerformanceId((prev) =>
+                                            String(prev) === String(id) ? null : String(id)
+                                        );
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <GraphLayer
                 nodes={graph?.nodes ?? null}
                 links={graph?.links ?? null}
+                highlightedPerformanceId={highlightedPerformanceId}
                 selectedContId={selectedContId}
                 onSelectContId={selectCont}
+                onClearHighlightedPerformance={() => {
+                    setHighlightedPerformanceId(null);
+                }}
+                onHighlightPerformance={(performanceId) => {
+                    setHighlightedPerformanceId(String(performanceId));
+                }}
             />
             <DetailContent
                 cont={selectedCont}
                 performanceById={performanceById}
-                onClose={() => setSelectedContId(null)}
+                contsInSamePerformance={contsInSamePerformance}
+                onSelectContId={selectCont}
+                onClose={() => {
+                    setSelectedContId(null);
+                    setHighlightedPerformanceId(null);
+                }}
             />
             <HelpModal
                 isOpen={isHelpOpen}
