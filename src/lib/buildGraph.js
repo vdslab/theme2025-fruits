@@ -20,7 +20,7 @@ export async function buildGraph({ width, height }) {
 
             const cols = line.split(",");
 
-            const performanceId = Number(cols[0]);
+            const performanceId = String(cols[0]);
             const contId = cols[1];
             const contName = cols[2];
 
